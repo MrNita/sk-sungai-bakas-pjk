@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PANITIA PJK - SK SUNGAI BAKAS, MIRI</title>
+  
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
@@ -12,6 +13,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- Font Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Firebase SDK (Compat Mode untuk Web Single Page) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
   <script>
     tailwind.config = {
       theme: {
@@ -43,7 +49,6 @@
       
       <!-- LOGO & TITLE SECTION -->
       <div class="flex items-center gap-3">
-        <!-- CUSTOM LOGO SLOT -->
         <div class="relative group cursor-pointer" onclick="triggerLogoUpload()" title="Klik untuk muat naik logo">
           <div id="logoContainer" class="w-12 h-12 sm:w-14 sm:h-14 bg-slate-800 border-2 border-brandYellow-400 rounded-lg flex flex-col items-center justify-center overflow-hidden shadow-inner text-center p-1">
             <i data-lucide="image-plus" class="w-5 h-5 text-brandYellow-400"></i>
@@ -52,13 +57,15 @@
           <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
         </div>
 
-        <!-- TITLE BOX -->
         <div>
           <div class="bg-brandRed-600 text-white font-black px-3 py-1 rounded shadow-md border border-brandRed-700 tracking-wide text-xs sm:text-base md:text-lg leading-snug uppercase">
             PANITIA PJK - SK SUNGAI BAKAS, MIRI
           </div>
-          <div class="text-brandYellow-400 font-extrabold text-[10px] sm:text-xs tracking-wider uppercase mt-0.5">
-            BERUSAHA KE ARAH KEJAYAAN
+          <div class="text-brandYellow-400 font-extrabold text-[10px] sm:text-xs tracking-wider uppercase mt-0.5 flex items-center gap-2">
+            <span>BERUSAHA KE ARAH KEJAYAAN</span>
+            <span id="liveStatusBadge" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] px-1.5 py-0.2 rounded flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> LIVE SYNC ACTIVE
+            </span>
           </div>
         </div>
       </div>
@@ -73,6 +80,12 @@
         <button onclick="openQRModal()" class="bg-brandNavy-800 hover:bg-slate-800 text-brandYellow-400 border border-brandYellow-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow">
           <i data-lucide="qr-code" class="w-4 h-4"></i>
           <span>QR Kod</span>
+        </button>
+
+        <!-- SPECIAL SAVE BUTTON FOR ADMIN -->
+        <button id="cloudSaveBtn" onclick="saveDataToCloud()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow-lg border border-emerald-400 animate-bounce">
+          <i data-lucide="cloud-upload" class="w-4 h-4"></i>
+          <span>SIMPAN KE LIVE WEBSITE</span>
         </button>
 
         <div id="adminStatusBadge" class="hidden bg-emerald-900/80 text-emerald-300 border border-emerald-500/40 text-xs px-2.5 py-1 rounded-md font-semibold flex items-center gap-1">
@@ -102,13 +115,12 @@
       <div class="bg-gradient-to-r from-brandNavy-900 via-brandNavy-800 to-brandRed-700 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="space-y-1 text-center md:text-left">
           <span class="inline-block bg-brandYellow-400 text-brandNavy-900 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            Sistem Pengurusan Digital Panitia
+            Sistem Pengurusan Digital Panitia (Real-Time Cloud)
           </span>
           <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Portal Panitia PJK</h1>
           <p class="text-slate-300 text-xs sm:text-sm">Pengurusan fail panitia, pentaksiran SEGAK & BMI, PLC, jadual & rekod sukan sekolah.</p>
         </div>
 
-        <!-- SEARCH BOX -->
         <div class="w-full md:w-80 relative">
           <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
           <input type="text" id="searchInput" onkeyup="filterModules()" placeholder="Cari modul atau dokumen..." class="w-full bg-slate-900/80 border border-slate-700 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brandYellow-400">
@@ -118,7 +130,6 @@
       <!-- 6 MAIN MODULE BUTTONS -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         
-        <!-- MODULE 1 -->
         <div onclick="openModule('m1')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-blue-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-bold px-2 py-0.5 bg-blue-100 text-blue-700 rounded">Fail 1</span>
@@ -132,7 +143,6 @@
           </div>
         </div>
 
-        <!-- MODULE 2 -->
         <div onclick="openModule('m2')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-indigo-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded">Fail 2</span>
@@ -146,7 +156,6 @@
           </div>
         </div>
 
-        <!-- MODULE 3 -->
         <div onclick="openModule('m3')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-emerald-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-bold px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded">Fail 3</span>
@@ -160,7 +169,6 @@
           </div>
         </div>
 
-        <!-- MODULE 4 -->
         <div onclick="openModule('m4')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-amber-500 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-bold px-2 py-0.5 bg-amber-100 text-amber-800 rounded">Fail 4</span>
@@ -174,7 +182,6 @@
           </div>
         </div>
 
-        <!-- MODULE 5 -->
         <div onclick="openModule('m5')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-purple-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-bold px-2 py-0.5 bg-purple-100 text-purple-700 rounded">Fail 5</span>
@@ -188,7 +195,6 @@
           </div>
         </div>
 
-        <!-- MODULE 6 -->
         <div onclick="openModule('m6')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-red-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
           <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-bold px-2 py-0.5 bg-red-100 text-red-700 rounded">Fail 6</span>
@@ -224,25 +230,21 @@
         <div class="overflow-x-auto py-4">
           <div class="min-w-[700px] flex flex-col items-center space-y-8">
             
-            <!-- LEVEL 1: PENASIAT / PENGERUSI -->
             <div>
               <div class="text-center text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Penasihat & Pengerusi</div>
               <div id="treeLevel1" class="flex justify-center gap-6"></div>
             </div>
 
-            <!-- LEVEL 2: KETUA PANITIA -->
             <div>
               <div class="text-center text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Ketua Panitia</div>
               <div id="treeLevel2" class="flex justify-center gap-6"></div>
             </div>
 
-            <!-- LEVEL 3: SETIAUSAHA -->
             <div>
               <div class="text-center text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Setiausaha</div>
               <div id="treeLevel3" class="flex justify-center gap-6"></div>
             </div>
 
-            <!-- LEVEL 4: AJK / GURU MATA PELAJARAN -->
             <div class="w-full">
               <div class="text-center text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">AJK & Guru Mata Pelajaran</div>
               <div id="treeLevel4" class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full"></div>
@@ -264,7 +266,6 @@
       </div>
 
       <div id="modDetailContent" class="bg-white rounded-2xl shadow-md p-6 border border-slate-200">
-        <!-- DYNAMIC CONTENT GOES HERE -->
       </div>
     </div>
 
@@ -343,7 +344,7 @@
       <h3 class="font-bold text-slate-800 text-base">QR Kod Portal Panitia</h3>
       <div id="qrcode" class="flex justify-center p-3 bg-slate-50 border rounded-xl"></div>
       <p id="qrUrlText" class="text-[11px] text-blue-600 font-medium break-all"></p>
-      <p class="text-xs text-slate-500">Imbas QR ini untuk mengakses portal Panitia PJK SK Sungai Bakas terkini.</p>
+      <p class="text-xs text-slate-500">Imbas QR ini untuk mengakses portal Panitia PJK SK Sungai Bakas terkini secara Live.</p>
       <button onclick="closeQRModal()" class="w-full bg-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-xs">Tutup</button>
     </div>
   </div>
@@ -352,11 +353,24 @@
   <div id="printableArea" class="hidden p-8 bg-white"></div>
 
   <script>
+    // --- FIREBASE CONFIGURATION ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjtcl9zvu-xpDrwRoaWL7KdASXKI5HijU",
+      authDomain: "panitia-pjk-sk-sg-bakas.firebaseapp.com",
+      projectId: "panitia-pjk-sk-sg-bakas",
+      storageBucket: "panitia-pjk-sk-sg-bakas.firebasestorage.app",
+      messagingSenderId: "1077322781652",
+      appId: "1:1077322781652:web:67b7f329637da6b5afbc41",
+      measurementId: "G-V78668GEJL"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     // APP GLOBAL STATE
     let isAdmin = false;
-    let logoData = localStorage.getItem('sksb_logo') || null;
-
-    let orgData = JSON.parse(localStorage.getItem('sksb_org')) || [
+    let logoData = null;
+    let orgData = [
       { id: '1', name: 'Pn. Guru Besar', role: 'Penasihat', level: 1, photo: '' },
       { id: '2', name: 'PK Pentadbiran', role: 'Pengerusi', level: 1, photo: '' },
       { id: '3', name: 'En. Nita Bin Ahmad', role: 'Ketua Panitia', level: 2, photo: '' },
@@ -364,27 +378,65 @@
       { id: '5', name: 'Guru PJK Tahun 1-3', role: 'AJK / Guru Mata Pelajaran', level: 4, photo: '' },
       { id: '6', name: 'Guru PJK Tahun 4-6', role: 'AJK / Guru Mata Pelajaran', level: 4, photo: '' }
     ];
+    let studentData = [];
+    let docsData = [];
+    let galleryData = [];
 
-    let studentData = JSON.parse(localStorage.getItem('sksb_students')) || [];
-    let docsData = JSON.parse(localStorage.getItem('sksb_docs')) || [];
-    let galleryData = JSON.parse(localStorage.getItem('sksb_gallery')) || [];
-
-    // INIT
+    // INIT REAL-TIME FIREBASE LISTENER
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
-      renderLogo();
-      renderOrgTree();
+      
+      // REAL-TIME CLOUD LISTENER (LIVE UPDATES TO ALL USERS)
+      db.collection("portal_pjk").doc("master_data").onSnapshot((doc) => {
+        if (doc.exists) {
+          const liveData = doc.data();
+          if (liveData.logoData) logoData = liveData.logoData;
+          if (liveData.orgData) orgData = liveData.orgData;
+          if (liveData.studentData) studentData = liveData.studentData;
+          if (liveData.docsData) docsData = liveData.docsData;
+          if (liveData.galleryData) galleryData = liveData.galleryData;
+          
+          renderLogo();
+          renderOrgTree();
+          if(!document.getElementById('viewModuleDetail').classList.contains('hidden')) {
+            openModule(currentActiveModule);
+          }
+        }
+      });
     });
 
+    // CLOUD SAVE FUNCTION (FOR ADMIN)
+    function saveDataToCloud() {
+      const payload = {
+        logoData: logoData || '',
+        orgData: orgData || [],
+        studentData: studentData || [],
+        docsData: docsData || [],
+        galleryData: galleryData || [],
+        lastUpdated: new Date().toISOString()
+      };
+
+      db.collection("portal_pjk").doc("master_data").set(payload)
+        .then(() => {
+          alert("BERJAYA! Semua kemas kini anda telah disimpan ke Live Website. Sesiapa yang mengimbas QR Kod akan terus mendapat paparan ini!");
+        })
+        .catch((err) => {
+          alert("Ralat menyimpan ke Cloud: " + err.message);
+        });
+    }
+
     // LOGO SYSTEM
-    function triggerLogoUpload() { document.getElementById('logoInput').click(); }
+    function triggerLogoUpload() { 
+      if(!isAdmin) return alert("Sila log masuk Admin untuk mengubah logo.");
+      document.getElementById('logoInput').click(); 
+    }
+    
     function handleLogoUpload(event) {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
           logoData = e.target.result;
-          localStorage.setItem('sksb_logo', logoData);
           renderLogo();
         }
         reader.readAsDataURL(file);
@@ -415,6 +467,7 @@
       if (id === 'nita' && pass === '7232') {
         isAdmin = true;
         document.getElementById('adminStatusBadge').classList.remove('hidden');
+        document.getElementById('cloudSaveBtn').classList.remove('hidden');
         document.getElementById('logoutBtn').classList.remove('hidden');
         document.getElementById('loginBtn').classList.add('hidden');
         document.getElementById('addOrgMemberBtn').classList.remove('hidden');
@@ -431,6 +484,7 @@
     function adminLogout() {
       isAdmin = false;
       document.getElementById('adminStatusBadge').classList.add('hidden');
+      document.getElementById('cloudSaveBtn').classList.add('hidden');
       document.getElementById('logoutBtn').classList.add('hidden');
       document.getElementById('loginBtn').classList.remove('hidden');
       document.getElementById('addOrgMemberBtn').classList.add('hidden');
@@ -484,6 +538,8 @@
       const l2 = document.getElementById('treeLevel2');
       const l3 = document.getElementById('treeLevel3');
       const l4 = document.getElementById('treeLevel4');
+
+      if(!l1 || !l2 || !l3 || !l4) return;
 
       l1.innerHTML = ''; l2.innerHTML = ''; l3.innerHTML = ''; l4.innerHTML = '';
 
@@ -546,7 +602,6 @@
         } else {
           orgData.push({ id: Date.now().toString(), name, role, level, photo: photoBase64 || '' });
         }
-        localStorage.setItem('sksb_org', JSON.stringify(orgData));
         renderOrgTree();
         closeOrgModal();
       };
@@ -573,7 +628,6 @@
 
     function deleteOrgMember(id) {
       orgData = orgData.filter(i => i.id !== id);
-      localStorage.setItem('sksb_org', JSON.stringify(orgData));
       renderOrgTree();
     }
 
@@ -627,7 +681,6 @@
     function renderModule4Content() {
       return `
         <div class="space-y-6">
-          <!-- STUDENT INPUT & CALCULATOR -->
           ${isAdmin ? `
             <div class="bg-slate-50 border rounded-xl p-5 space-y-4">
               <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4 text-amber-600"></i> Key-In Data Murid (BMI / SEGAK)</h3>
@@ -647,7 +700,6 @@
             </div>
           ` : ''}
 
-          <!-- STUDENT TABLE -->
           <div class="space-y-3">
             <h3 class="font-bold text-slate-800 text-sm">Rekod Pentaksiran BMI & SEGAK Murid</h3>
             <div class="overflow-x-auto border rounded-xl">
@@ -675,7 +727,6 @@
     function renderModule5Content() {
       return `
         <div class="space-y-6">
-          <!-- OPR GENERATOR -->
           <div class="bg-slate-50 border rounded-xl p-5 space-y-4">
             <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i data-lucide="file-check-2" class="w-4 h-4 text-purple-600"></i> Jana Laporan One Page Report (OPR)</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -688,7 +739,6 @@
             </div>
           </div>
 
-          <!-- PHOTO GALLERY -->
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <h3 class="font-bold text-slate-800 text-sm">Galeri Aktiviti & Program</h3>
@@ -726,7 +776,6 @@
             name: file.name,
             date: new Date().toLocaleDateString('ms-MY')
           });
-          localStorage.setItem('sksb_docs', JSON.stringify(docsData));
           openModule(currentActiveModule);
         }
       };
@@ -761,7 +810,6 @@
 
     function deleteDoc(id) {
       docsData = docsData.filter(d => d.id !== id);
-      localStorage.setItem('sksb_docs', JSON.stringify(docsData));
       openModule(currentActiveModule);
     }
 
@@ -791,7 +839,6 @@
       else if (segakSkor > 0) segakGred = 'D (Perlu Penambahbaikan)';
 
       studentData.push({ id: Date.now().toString(), name, stClass, age, bmi, bmiStatus, segakSkor, segakGred });
-      localStorage.setItem('sksb_students', JSON.stringify(studentData));
       renderStudentTable();
 
       document.getElementById('stName').value = '';
@@ -828,11 +875,10 @@
 
     function deleteStudent(id) {
       studentData = studentData.filter(s => s.id !== id);
-      localStorage.setItem('sksb_students', JSON.stringify(studentData));
       renderStudentTable();
     }
 
-    // AUTO NOTIS LETTER GENERATOR
+    // NOTIS LETTER GENERATOR
     function generateNotisLetter() {
       const bil = document.getElementById('notisBil').value || '1/2026';
       const tarikh = document.getElementById('notisTarikh').value || '2026-03-30';
@@ -900,7 +946,6 @@
         const reader = new FileReader();
         reader.onload = (evt) => {
           galleryData.push({ id: Date.now().toString(), src: evt.target.result });
-          localStorage.setItem('sksb_gallery', JSON.stringify(galleryData));
           renderGalleryGrid();
         };
         reader.readAsDataURL(file);
@@ -928,7 +973,6 @@
 
     function deleteGallery(id) {
       galleryData = galleryData.filter(g => g.id !== id);
-      localStorage.setItem('sksb_gallery', JSON.stringify(galleryData));
       renderGalleryGrid();
     }
 
@@ -938,7 +982,6 @@
       const qrel = document.getElementById('qrcode');
       qrel.innerHTML = '';
 
-      // URL rasmi GitHub Pages
       const targetUrl = "https://mrnita.github.io/sk-sungai-bakas-pjk/";
       document.getElementById('qrUrlText').innerText = targetUrl;
 
