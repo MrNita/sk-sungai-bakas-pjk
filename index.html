@@ -1,1230 +1,478 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PANITIA PJK - SK SUNGAI BAKAS, MIRI</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- QRCode.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- Font Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- Tailwind Custom Configuration -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        navy: {
-                            800: '#1e293b',
-                            900: '#0f172a',
-                            950: '#020617',
-                        },
-                        brandGold: {
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                        },
-                        brandRed: {
-                            500: '#ef4444',
-                            600: '#dc2626',
-                            700: '#b91c1c',
-                        }
-                    }
-                }
-            }
-        };
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PANITIA PJK - SK SUNGAI BAKAS, MIRI</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Font Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brandNavy: { 900: '#0B1329', 800: '#0F172A', 700: '#1E293B' },
+            brandRed: { 600: '#DC2626', 700: '#B91C1C' },
+            brandYellow: { 400: '#FACC15', 500: '#EAB308' }
+          }
         }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 9999px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-        @media print {
-            .no-print {
-                display: none !important;
-            }
-            .print-only {
-                display: block !important;
-            }
-        }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    .tree-line-v { position: absolute; left: 50%; top: 100%; width: 2px; height: 1.5rem; background-color: #cbd5e1; transform: translateX(-50%); }
+    .tree-line-h { position: absolute; top: 0; left: 15%; right: 15%; height: 2px; background-color: #cbd5e1; }
+    .tree-line-down { position: absolute; top: 0; left: 50%; width: 2px; height: 1rem; background-color: #cbd5e1; transform: translateX(-50%); }
+  </style>
 </head>
-<body class="text-slate-800 flex flex-col min-h-screen bg-slate-100 selection:bg-brandGold-400 selection:text-navy-950">
+<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- Top System Mode Indicator Banner -->
-    <div id="modeBanner" class="bg-navy-950 text-white text-xs py-1.5 px-4 flex justify-between items-center border-b border-amber-500/30">
-        <div class="max-w-7xl mx-auto w-full flex justify-between items-center px-2 sm:px-4">
-            <div class="flex items-center space-x-2">
-                <span id="modeBadge" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="modeText" class="font-medium tracking-wide">Mod Paparan: <strong class="text-brandGold-400">Pengunjung (Baca Sahaja)</strong></span>
-            </div>
-            <div class="flex items-center space-x-3">
-                <button id="adminToggleBtn" onclick="openAdminAuthModal()" class="text-[11px] font-bold bg-brandRed-600 hover:bg-brandRed-700 text-white px-2.5 py-1 rounded transition flex items-center space-x-1 shadow">
-                    <i data-lucide="lock" class="w-3 h-3"></i>
-                    <span id="adminToggleText">Log Masuk Admin</span>
+  <!-- TOP HEADER -->
+  <header class="bg-brandNavy-900 text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- LOGO & TITLE SECTION -->
+      <div class="flex items-center gap-3">
+        <!-- CUSTOM LOGO SLOT -->
+        <div class="relative group cursor-pointer" onclick="triggerLogoUpload()">
+          <div id="logoContainer" class="w-14 h-14 bg-slate-800 border-2 border-brandYellow-400 rounded-lg flex flex-col items-center justify-center overflow-hidden shadow-inner text-center p-1">
+            <i data-lucide="image-plus" class="w-5 h-5 text-brandYellow-400"></i>
+            <span class="text-[9px] text-slate-300 font-medium leading-none mt-1">Logo</span>
+          </div>
+          <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+        </div>
+
+        <!-- TITLE BOX -->
+        <div>
+          <div class="bg-brandRed-600 text-white font-black px-3 py-1 rounded shadow-md border border-brandRed-700 tracking-wide text-xs sm:text-lg md:text-xl leading-snug uppercase">
+            PANITIA PJK - SK SUNGAI BAKAS, MIRI
+          </div>
+          <div class="text-brandYellow-400 font-extrabold text-xs sm:text-sm tracking-wider uppercase mt-0.5">
+            BERUSAHA KE ARAH KEJAYAAN
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTROLS & LOGIN -->
+      <div class="flex items-center gap-2 flex-wrap ml-auto">
+        <button onclick="openQRModal()" class="bg-brandNavy-800 hover:bg-slate-800 text-brandYellow-400 border border-brandYellow-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow">
+          <i data-lucide="qr-code" class="w-4 h-4"></i>
+          <span>QR Kod</span>
+        </button>
+
+        <div id="adminStatusBadge" class="hidden bg-emerald-900/80 text-emerald-300 border border-emerald-500/40 text-xs px-2.5 py-1 rounded-md font-semibold flex items-center gap-1">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Admin Active
+        </div>
+
+        <button id="loginBtn" onclick="openLoginModal()" class="bg-brandYellow-500 hover:bg-brandYellow-400 text-brandNavy-900 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
+          <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+          <span>Log Masuk Admin</span>
+        </button>
+
+        <button id="logoutBtn" onclick="adminLogout()" class="hidden bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 shadow transition">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+          <span>Keluar</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
+
+    <!-- BANNER & SEARCH BAR -->
+    <div class="bg-gradient-to-r from-brandNavy-900 via-brandNavy-800 to-brandRed-700 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-1 text-center md:text-left">
+        <span class="inline-block bg-brandYellow-400 text-brandNavy-900 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+          Sistem Pengurusan Digital
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Portal Panitia PJK</h1>
+        <p class="text-slate-300 text-xs sm:text-sm">Pengurusan fail panitia, pentaksiran SEGAK & PBD, serta rekod sukan sekolah.</p>
+      </div>
+
+      <!-- SEARCH BOX -->
+      <div class="w-full md:w-80 relative">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+        <input type="text" id="searchInput" onkeyup="filterModules()" placeholder="Cari modul atau dokumen..." class="w-full bg-slate-900/80 border border-slate-700 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brandYellow-400">
+      </div>
+    </div>
+
+    <!-- 6 MAIN MODULE BUTTONS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      
+      <!-- MODULE 1 -->
+      <div onclick="openModule('m1')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-blue-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold px-2 py-0.5 bg-blue-100 text-blue-700 rounded">Fail 1</span>
+          <i data-lucide="folder-kanban" class="w-6 h-6 text-blue-600"></i>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Pengurusan & Pentadbiran</h3>
+        <p class="text-xs text-slate-500 mb-4">Carta organisasi, biodata guru, SPI, ABM & inventori stok.</p>
+        <div class="text-xs font-semibold text-blue-600 flex items-center gap-1">
+          <span>Buka Submodul</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </div>
+      </div>
+
+      <!-- MODULE 2 -->
+      <div onclick="openModule('m2')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-indigo-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded">Fail 2</span>
+          <i data-lucide="users-2" class="w-6 h-6 text-indigo-600"></i>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Mesyuarat Panitia</h3>
+        <p class="text-xs text-slate-500 mb-4">Surat panggilan, minit mesyuarat 1-4 & maklum balas.</p>
+        <div class="text-xs font-semibold text-indigo-600 flex items-center gap-1">
+          <span>Buka Submodul</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </div>
+      </div>
+
+      <!-- MODULE 3 -->
+      <div onclick="openModule('m3')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-emerald-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded">Fail 3</span>
+          <i data-lucide="book-open-check" class="w-6 h-6 text-emerald-600"></i>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Kurikulum (DSKP & RPH)</h3>
+        <p class="text-xs text-slate-500 mb-4">DSKP KSSR Semakan, RPT tahunan & templat e-RPH.</p>
+        <div class="text-xs font-semibold text-emerald-600 flex items-center gap-1">
+          <span>Buka Submodul</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </div>
+      </div>
+
+      <!-- MODULE 4 -->
+      <div onclick="openModule('m4')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-amber-500 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold px-2 py-0.5 bg-amber-100 text-amber-800 rounded">Fail 4</span>
+          <i data-lucide="activity" class="w-6 h-6 text-amber-600"></i>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Pentaksiran (PBD & SEGAK)</h3>
+        <p class="text-xs text-slate-500 mb-4">Rekod transit PBD, kalkulator SEGAK/BMI & bank soalan.</p>
+        <div class="text-xs font-semibold text-amber-600 flex items-center gap-1">
+          <span>Buka Submodul</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </div>
+      </div>
+
+      <!-- MODULE 5 -->
+      <div onclick="openModule('m5')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-purple-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold px-2 py-0.5 bg-purple-100 text-purple-700 rounded">Fail 5</span>
+          <i data-lucide="award" class="w-6 h-6 text-purple-600"></i>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">PLC & Program Panitia</h3>
+        <p class="text-xs text-slate-500 mb-4">Perancangan strategik (PSO), rekod PLC & laporan aktiviti.</p>
+        <div class="text-xs font-semibold text-purple-600 flex items-center gap-1">
+          <span>Buka Submodul</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </div>
+      </div>
+
+      <!-- MODULE 6 -->
+      <div onclick="openModule('m6')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-red-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold px-2 py-0.5 bg-red-100 text-red-700 rounded">Fail 6</span>
+          <i data-lucide="shield-alert" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Pengurusan Keselamatan & SOP</h3>
+        <p class="text-xs text-slate-500 mb-4">Manual SOP padang/stor, laporan kecederaan & pemeriksaan.</p>
+        <div class="text-xs font-semibold text-red-600 flex items-center gap-1">
+          <span>Buka Submodul</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CARTA ORGANISASI TREE CHART SECTION -->
+    <section class="bg-white rounded-2xl shadow-md p-6 border border-slate-200">
+      <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <i data-lucide="git-fork" class="w-5 h-5 text-brandRed-600"></i>
+            Carta Organisasi Panitia PJK
+          </h2>
+          <p class="text-xs text-slate-500">Struktur jawatan kepimpinan Panitia PJK SK Sungai Bakas</p>
+        </div>
+
+        <!-- ADMIN ADD BUTTON -->
+        <button id="addOrgMemberBtn" onclick="openOrgModal()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow">
+          <i data-lucide="plus" class="w-4 h-4"></i> Tambah Ahli Jawatankuasa
+        </button>
+      </div>
+
+      <!-- VISUAL HIERARCHY TREE CHART -->
+      <div class="overflow-x-auto py-4">
+        <div class="min-w-[700px] flex flex-col items-center space-y-8">
+          
+          <!-- LEVEL 1: PENASIAT / PENGERUSI -->
+          <div id="treeLevel1" class="flex justify-center gap-6"></div>
+
+          <!-- LEVEL 2: KETUA PANITIA -->
+          <div id="treeLevel2" class="flex justify-center gap-6"></div>
+
+          <!-- LEVEL 3: SETIAUSAHA -->
+          <div id="treeLevel3" class="flex justify-center gap-6"></div>
+
+          <!-- LEVEL 4: AJK / GURU MATA PELAJARAN -->
+          <div id="treeLevel4" class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full"></div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: LOGIN ADMIN -->
+  <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-slate-200">
+      <div class="text-center mb-4">
+        <div class="w-12 h-12 bg-brandRed-100 text-brandRed-600 rounded-full flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="shield-lock" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800">Log Masuk Admin</h3>
+        <p class="text-xs text-slate-500">Sila masukkan ID dan kata laluan pentadbir.</p>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-slate-700 block mb-1">ID Admin</label>
+          <input type="text" id="adminIdInput" placeholder="Masukkan ID" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brandRed-600 focus:outline-none">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-700 block mb-1">Kata Laluan</label>
+          <input type="password" id="adminPassInput" placeholder="Masukkan Kata Laluan" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brandRed-600 focus:outline-none">
+        </div>
+        <p id="loginError" class="text-xs text-red-600 hidden font-semibold">ID atau Kata Laluan tidak sah!</p>
+        <button onclick="submitAdminLogin()" class="w-full bg-brandRed-600 hover:bg-brandRed-700 text-white font-bold py-2 rounded-lg text-xs transition shadow">
+          Log Masuk
+        </button>
+        <button onclick="closeLoginModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2 rounded-lg text-xs transition">
+          Batal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CARTA ORGANISASI EDIT / TAMBAH -->
+  <div id="orgModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
+      <h3 id="orgModalTitle" class="text-lg font-bold text-slate-800 mb-4">Tambah Ahli Jawatankuasa</h3>
+      <input type="hidden" id="orgEditId">
+      
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-slate-700 block mb-1">Nama Pegawai / Guru</label>
+          <input type="text" id="orgNameInput" placeholder="Contoh: En. Ahmad Bin Ali" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brandNavy-900">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-700 block mb-1">Jawatan Panitia</label>
+          <input type="text" id="orgRoleInput" placeholder="Contoh: Ketua Panitia / Setiausaha" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brandNavy-900">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-700 block mb-1">Peringkat Hirarki (Tree Level)</label>
+          <select id="orgLevelInput" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brandNavy-900">
+            <option value="1">Level 1 - Penasihat / Pengerusi</option>
+            <option value="2">Level 2 - Ketua Panitia</option>
+            <option value="3">Level 3 - Setiausaha</option>
+            <option value="4">Level 4 - AJK / Guru Mata Pelajaran</option>
+          </select>
+        </div>
+        <div class="flex gap-2 pt-2">
+          <button onclick="saveOrgMember()" class="flex-1 bg-brandNavy-900 text-white font-bold py-2 rounded-lg text-xs">Simpan</button>
+          <button onclick="closeOrgModal()" class="flex-1 bg-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-xs">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: QR CODE -->
+  <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center border border-slate-200 space-y-4">
+      <h3 class="font-bold text-slate-800 text-base">QR Kod Pelawat</h3>
+      <div id="qrcode" class="flex justify-center p-3 bg-slate-50 border rounded-xl"></div>
+      <p class="text-xs text-slate-500">Imbas QR ini untuk terus ke portal Panitia PJK SK Sungai Bakas.</p>
+      <button onclick="closeQRModal()" class="w-full bg-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-xs">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    // INITIAL DATA & APP STATE
+    let isAdmin = false;
+    let logoData = localStorage.getItem('sksb_logo') || null;
+
+    let orgData = JSON.parse(localStorage.getItem('sksb_org')) || [
+      { id: '1', name: 'Pn. Guru Besar', role: 'Penasihat', level: 1 },
+      { id: '2', name: 'PK Pentadbiran', role: 'Pengerusi', level: 1 },
+      { id: '3', name: 'En. Nita Bin Ahmad', role: 'Ketua Panitia', level: 2 },
+      { id: '4', name: 'Pn. Setiausaha PJK', role: 'Setiausaha', level: 3 },
+      { id: '5', name: 'Guru PJK Tahun 1-3', role: 'AJK / Guru Mata Pelajaran', level: 4 },
+      { id: '6', name: 'Guru PJK Tahun 4-6', role: 'AJK / Guru Mata Pelajaran', level: 4 }
+    ];
+
+    // INIT FUNCTION
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      renderLogo();
+      renderOrgTree();
+    });
+
+    // LOGO SYSTEM
+    function triggerLogoUpload() {
+      document.getElementById('logoInput').click();
+    }
+
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          logoData = e.target.result;
+          localStorage.setItem('sksb_logo', logoData);
+          renderLogo();
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function renderLogo() {
+      const container = document.getElementById('logoContainer');
+      if (logoData) {
+        container.innerHTML = `<img src="${logoData}" class="w-full h-full object-contain">`;
+      } else {
+        container.innerHTML = `
+          <i data-lucide="image-plus" class="w-5 h-5 text-brandYellow-400"></i>
+          <span class="text-[9px] text-slate-300 font-medium leading-none mt-1">Upload</span>
+        `;
+        lucide.createIcons();
+      }
+    }
+
+    // ADMIN LOGIN SYSTEM
+    function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
+    function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+
+    function submitAdminLogin() {
+      const id = document.getElementById('adminIdInput').value.trim();
+      const pass = document.getElementById('adminPassInput').value.trim();
+
+      if (id === 'nita' && pass === '7232') {
+        isAdmin = true;
+        document.getElementById('adminStatusBadge').classList.remove('hidden');
+        document.getElementById('logoutBtn').classList.remove('hidden');
+        document.getElementById('loginBtn').classList.add('hidden');
+        document.getElementById('addOrgMemberBtn').classList.remove('hidden');
+        closeLoginModal();
+        renderOrgTree();
+      } else {
+        document.getElementById('loginError').classList.remove('hidden');
+      }
+    }
+
+    function adminLogout() {
+      isAdmin = false;
+      document.getElementById('adminStatusBadge').classList.add('hidden');
+      document.getElementById('logoutBtn').classList.add('hidden');
+      document.getElementById('loginBtn').classList.remove('hidden');
+      document.getElementById('addOrgMemberBtn').classList.add('hidden');
+      renderOrgTree();
+    }
+
+    // CARTA ORGANISASI TREE RENDERER
+    function renderOrgTree() {
+      const l1 = document.getElementById('treeLevel1');
+      const l2 = document.getElementById('treeLevel2');
+      const l3 = document.getElementById('treeLevel3');
+      const l4 = document.getElementById('treeLevel4');
+
+      l1.innerHTML = ''; l2.innerHTML = ''; l3.innerHTML = ''; l4.innerHTML = '';
+
+      orgData.forEach(item => {
+        const cardHtml = `
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm hover:shadow text-center relative group min-w-[160px]">
+            <div class="font-bold text-xs text-slate-800">${item.name}</div>
+            <div class="text-[11px] font-semibold text-brandRed-600">${item.role}</div>
+            ${isAdmin ? `
+              <div class="mt-2 flex justify-center gap-2">
+                <button onclick="deleteOrgMember('${item.id}')" class="text-red-600 hover:text-red-800 text-[10px] bg-red-50 border border-red-200 px-1.5 py-0.5 rounded flex items-center gap-1">
+                  <i data-lucide="trash-2" class="w-3 h-3"></i> Padam
                 </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Navigation Header -->
-    <header class="bg-navy-900 border-b-4 border-brandGold-500 sticky top-0 z-30 shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-24 items-center gap-2">
-                <!-- Custom Logo Upload Area & Title Box -->
-                <div class="flex items-center space-x-3 sm:space-x-4">
-                    <!-- Dynamic Interactive Logo Dropzone -->
-                    <div class="relative group">
-                        <div id="headerLogoContainer" onclick="triggerLogoSelect()" class="w-14 h-14 sm:w-16 sm:h-16 bg-slate-800/80 hover:bg-slate-800 border-2 border-dashed border-brandGold-400/80 hover:border-brandGold-400 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition overflow-hidden shadow-md group">
-                            <img id="headerLogoImg" src="" alt="Logo Sekolah" class="w-full h-full object-contain p-1 hidden">
-                            <div id="headerLogoPlaceholder" class="flex flex-col items-center justify-center text-brandGold-400 text-[10px] font-semibold text-center p-1 space-y-0.5">
-                                <i data-lucide="image-plus" class="w-5 h-5 text-brandGold-400 group-hover:scale-110 transition"></i>
-                                <span class="leading-tight">Muat Naik Logo</span>
-                            </div>
-                        </div>
-                        <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoUpload(event)" class="hidden">
-                </div>
-
-                <div>
-                    <!-- Title Box: Red Background, White Text -->
-                    <div class="inline-block bg-brandRed-600 text-white font-black text-sm sm:text-xl px-3 py-1.5 rounded-lg shadow-md uppercase tracking-tight leading-none border border-brandRed-500">
-                        PANITIA PJK - SK SUNGAI BAKAS, MIRI
-                    </div>
-                    <!-- Slogan: Yellow Text -->
-                    <p class="text-xs sm:text-sm font-extrabold text-brandGold-400 tracking-wide mt-1.5 flex items-center gap-1">
-                        <span>"BERUSAHA KE ARAH KEJAYAAN"</span>
-                        <span class="text-slate-400 hidden lg:inline font-normal">• KOD SEKOLAH: YBB4302</span>
-                    </p>
-                </div>
-            </div>
-
-            <!-- Right Header Actions -->
-                <div class="flex items-center space-x-2">
-                    <button onclick="openModal('orgModal')" class="inline-flex items-center space-x-1.5 bg-navy-800 hover:bg-navy-700 text-white px-2.5 py-2 sm:px-3 sm:py-2 rounded-xl text-xs font-bold transition border border-slate-700 shadow-sm">
-                        <i data-lucide="users" class="w-4 h-4 text-brandGold-400"></i>
-                        <span class="hidden md:inline">Carta Organisasi & Guru</span>
-                    </button>
-                    <button onclick="openModal('segakDataModal')" class="inline-flex items-center space-x-1.5 bg-brandRed-600 hover:bg-brandRed-700 text-white px-2.5 py-2 sm:px-3 sm:py-2 rounded-xl text-xs font-bold transition border border-red-500 shadow-sm">
-                        <i data-lucide="activity" class="w-4 h-4 text-brandGold-400"></i>
-                        <span>BMI & SEGAK</span>
-                    </button>
-                    <button onclick="openQrModal()" class="inline-flex items-center space-x-1.5 bg-brandGold-500 hover:bg-brandGold-600 text-navy-950 font-black px-2.5 py-2 sm:px-3 sm:py-2 rounded-xl text-xs transition border border-yellow-300 shadow-md">
-                        <i data-lucide="qr-code" class="w-4 h-4 text-navy-950"></i>
-                        <span class="hidden lg:inline">Kod QR Pengunjung</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
-        <!-- Hero Branding Banner -->
-        <div class="bg-gradient-to-r from-navy-950 via-navy-900 to-brandRed-700 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden border border-brandGold-500/30">
-            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#facc15_1px,transparent_1px)] [background-size:16px_16px]"></div>
-            
-            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                <div class="space-y-3 max-w-2xl">
-                    <div class="inline-flex items-center space-x-2 bg-brandGold-500/20 text-brandGold-400 px-3.5 py-1 rounded-full text-xs font-bold border border-brandGold-500/30">
-                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                        <span>Sistem Pengurusan Digital Panitia PJK SKPM Kualiti Sekolah</span>
-                    </div>
-                    <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight">
-                        Hub Pengurusan Panitia PJK SK Sungai Bakas, Miri
-                    </h2>
-                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                        Satu platform digital bersepadu untuk pengurusan 6 Fail Utama Panitia, DSKP, Minit Mesyuarat, Rekod BMI (5-9 Tahun), Ujian SEGAK (10-13 Tahun), Jadual Waktu, dan Prosedur Keselamatan Padang.
-                    </p>
-                    <!-- Slogan Banner Badge -->
-                    <div class="pt-2 flex flex-wrap gap-2 text-xs font-semibold">
-                        <span class="bg-brandGold-400 text-black px-3 py-1 rounded-lg font-black border border-yellow-300 shadow">
-                            MOTTO: "BERUSAHA KE ARAH KEJAYAAN"
-                        </span>
-                        <span class="bg-white/10 text-emerald-300 px-3 py-1 rounded-lg border border-white/10">Sesi Persekolahan 2026/2027</span>
-                    </div>
-                </div>
-
-                <!-- Interactive Shortcut Panel -->
-                <div class="grid grid-cols-2 gap-3 min-w-[280px]">
-                    <button onclick="openModal('orgModal')" class="bg-navy-950/90 hover:bg-navy-800 backdrop-blur-md rounded-2xl p-4 border border-brandGold-500/40 text-left shadow-lg transition group">
-                        <i data-lucide="users" class="w-6 h-6 text-brandGold-400 mb-2 group-hover:scale-110 transition"></i>
-                        <span class="text-xs font-extrabold text-white block">AJK & Guru PJK</span>
-                        <p class="text-[10px] text-slate-300 mt-0.5">Carta & Jadual Mengajar</p>
-                    </button>
-
-                    <button onclick="openModal('timetableModal')" class="bg-navy-950/90 hover:bg-navy-800 backdrop-blur-md rounded-2xl p-4 border border-brandGold-500/40 text-left shadow-lg transition group">
-                        <i data-lucide="calendar" class="w-6 h-6 text-emerald-400 mb-2 group-hover:scale-110 transition"></i>
-                        <span class="text-xs font-extrabold text-white block">Jadual Waktu PJK</span>
-                        <p class="text-[10px] text-slate-300 mt-0.5">Muat Naik & Semak</p>
-                    </button>
-
-                    <button onclick="openModal('segakDataModal')" class="bg-navy-950/90 hover:bg-navy-800 backdrop-blur-md rounded-2xl p-4 border border-brandGold-500/40 text-left shadow-lg transition group col-span-2">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-xs font-extrabold text-brandGold-400 block">Modul BMI (5-9T) & SEGAK (10-13T)</span>
-                                <p class="text-[10px] text-slate-300 mt-0.5">Kemaskini Nama Murid & Pengiraan Skor Terkini</p>
-                            </div>
-                            <i data-lucide="calculator" class="w-6 h-6 text-brandRed-500"></i>
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Announcements Section -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <div class="flex items-center space-x-2">
-                    <span class="p-2 rounded-lg bg-brandRed-600 text-white"><i data-lucide="megaphone" class="w-4 h-4"></i></span>
-                    <h3 class="font-bold text-slate-900 text-base">Makluman & Pengumuman Panitia PJK</h3>
-                </div>
-                <button id="addNoticeBtn" onclick="openNoticeModal()" class="hidden text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-semibold transition">
-                    + Tambah Pengumuman
-                </button>
-            </div>
-            <div id="noticeList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <!-- Dynamic notices inserted via JS -->
-            </div>
-        </div>
-
-        <!-- Search and Quick Filter Bar -->
-        <div class="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="relative w-full sm:w-96">
-                <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="searchInput" oninput="filterModules()" placeholder="Cari fail, DSKP, Minit Mesyuarat, SEGAK, Guru..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-brandRed-600 focus:bg-white transition">
-            </div>
-            <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
-                <span class="text-xs text-slate-500 font-semibold">Susunan Fail KPM:</span>
-                <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-extrabold bg-navy-900 text-brandGold-400 border border-navy-800">
-                    FAIL 1 SEHINGGA FAIL 6
-                </span>
-            </div>
-        </div>
-
-        <!-- 6 Main Module Cards Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="moduleGrid">
-
-            <!-- MODULE 1: PENGURUSAN & PENTADBIRAN -->
-            <div class="module-card bg-white rounded-2xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-brandRed-600 transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1">
-                <div>
-                    <div class="bg-navy-950 p-5 text-white relative border-b-4 border-brandRed-600">
-                        <div class="flex justify-between items-start">
-                            <div class="w-12 h-12 rounded-xl bg-brandRed-600 flex items-center justify-center text-white shadow-lg">
-                                <i data-lucide="folder-kanban" class="w-6 h-6"></i>
-                            </div>
-                            <span class="bg-brandGold-500 text-navy-950 text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">FAIL 1</span>
-                        </div>
-                        <h3 class="text-xl font-bold mt-4 text-white">Pengurusan & Pentadbiran</h3>
-                        <p class="text-slate-300 text-xs mt-1">Organisasi, Biodata Guru, Pekeliling SPI, ABM & Inventori</p>
-                    </div>
-
-                    <div class="p-5 space-y-2.5">
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>1.1 Carta Organisasi Panitia</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>1.2 Biodata & Senarai Guru PJK</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>1.3 Pekeliling Ikhtisas (SPI PJK)</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>1.4 Anggaran Belanja Mengurus (ABM)</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>1.5 Inventori & Stok Alatan Sukan</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-5 pt-0">
-                    <button onclick="openDrawer('mod1')" class="w-full bg-navy-900 hover:bg-brandRed-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition duration-200 flex items-center justify-center space-x-2 shadow">
-                        <span>Buka Modul 1</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- MODULE 2: MESYUARAT PANITIA -->
-            <div class="module-card bg-white rounded-2xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-brandGold-500 transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1">
-                <div>
-                    <div class="bg-navy-950 p-5 text-white relative border-b-4 border-brandGold-500">
-                        <div class="flex justify-between items-start">
-                            <div class="w-12 h-12 rounded-xl bg-brandGold-500 text-navy-950 flex items-center justify-center font-bold shadow-lg">
-                                <i data-lucide="users-2" class="w-6 h-6"></i>
-                            </div>
-                            <span class="bg-brandRed-600 text-white text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">FAIL 2</span>
-                        </div>
-                        <h3 class="text-xl font-bold mt-4 text-white">Mesyuarat Panitia</h3>
-                        <p class="text-slate-300 text-xs mt-1">Notis Panggilan, Minit Mesyuarat 1-4 & Maklum Balas</p>
-                    </div>
-
-                    <div class="p-5 space-y-2.5">
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandGold-500"></span>
-                            <span>2.1 Surat Panggilan Mesyuarat</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandGold-500"></span>
-                            <span>2.2 Minit Mesyuarat Panitia (1-4)</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandGold-500"></span>
-                            <span>2.3 Borang Maklum Balas Mesyuarat</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-5 pt-0">
-                    <button onclick="openDrawer('mod2')" class="w-full bg-navy-900 hover:bg-brandGold-500 hover:text-navy-950 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition duration-200 flex items-center justify-center space-x-2 shadow">
-                        <span>Buka Modul 2</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- MODULE 3: KURIKULUM (DSKP, RPT & RPH) -->
-            <div class="module-card bg-white rounded-2xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-600 transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1">
-                <div>
-                    <div class="bg-navy-950 p-5 text-white relative border-b-4 border-emerald-500">
-                        <div class="flex justify-between items-start">
-                            <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-lg">
-                                <i data-lucide="book-open-check" class="w-6 h-6"></i>
-                            </div>
-                            <span class="bg-emerald-600 text-white text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">FAIL 3</span>
-                        </div>
-                        <h3 class="text-xl font-bold mt-4 text-white">Kurikulum (DSKP & RPH)</h3>
-                        <p class="text-slate-300 text-xs mt-1">Dokumen Standard Kurikulum, RPT Tahunan & Penulisan e-RPH</p>
-                    </div>
-
-                    <div class="p-5 space-y-2.5">
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            <span>3.1 DSKP KSSR Semakan PJK Terkini</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            <span>3.2 Rancangan Pelajaran Tahunan (RPT)</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            <span>3.3 Modul & Templat Penulisan e-RPH</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-5 pt-0">
-                    <button onclick="openDrawer('mod3')" class="w-full bg-navy-900 hover:bg-emerald-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition duration-200 flex items-center justify-center space-x-2 shadow">
-                        <span>Buka Modul 3</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- MODULE 4: PENTAKSIRAN (PBD, BMI 5-9T & SEGAK) -->
-            <div class="module-card bg-white rounded-2xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-brandRed-600 transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1">
-                <div>
-                    <div class="bg-navy-950 p-5 text-white relative border-b-4 border-brandRed-600">
-                        <div class="flex justify-between items-start">
-                            <div class="w-12 h-12 rounded-xl bg-brandRed-600 text-white flex items-center justify-center font-bold shadow-lg">
-                                <i data-lucide="activity" class="w-6 h-6"></i>
-                            </div>
-                            <span class="bg-brandGold-500 text-navy-950 text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">FAIL 4</span>
-                        </div>
-                        <h3 class="text-xl font-bold mt-4 text-white">Pentaksiran (PBD & SEGAK)</h3>
-                        <p class="text-slate-300 text-xs mt-1">Rekod PBD, BMI 5-9T, Norma SEGAK, Kalkulator & Bank Soalan</p>
-                    </div>
-
-                    <div class="p-5 space-y-2.5">
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>4.1 Pentaksiran Bilik Darjah (PBD)</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>4.2 BMI (5-9 Tahun) & Ujian SEGAK</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>4.3 Bank Soalan & Analisis Peperiksaan</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-5 pt-0">
-                    <button onclick="openDrawer('mod4')" class="w-full bg-navy-900 hover:bg-brandRed-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition duration-200 flex items-center justify-center space-x-2 shadow">
-                        <span>Buka Modul 4</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- MODULE 5: PLC & PROGRAM PANITIA -->
-            <div class="module-card bg-white rounded-2xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-purple-600 transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1">
-                <div>
-                    <div class="bg-navy-950 p-5 text-white relative border-b-4 border-purple-500">
-                        <div class="flex justify-between items-start">
-                            <div class="w-12 h-12 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold shadow-lg">
-                                <i data-lucide="trophy" class="w-6 h-6"></i>
-                            </div>
-                            <span class="bg-purple-600 text-white text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">FAIL 5</span>
-                        </div>
-                        <h3 class="text-xl font-bold mt-4 text-white">PLC & Program Panitia</h3>
-                        <p class="text-slate-300 text-xs mt-1">Perancangan PSO, Sesi PLC Guru & Laporan Impak Aktiviti</p>
-                    </div>
-
-                    <div class="p-5 space-y-2.5">
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                            <span>5.1 Perancangan Strategik (PSO)</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                            <span>5.2 Komuniti Pembelajaran (PLC)</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                            <span>5.3 Program Khusus & Laporan Impak</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-5 pt-0">
-                    <button onclick="openDrawer('mod5')" class="w-full bg-navy-900 hover:bg-purple-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition duration-200 flex items-center justify-center space-x-2 shadow">
-                        <span>Buka Modul 5</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- MODULE 6: PENGURUSAN KESELAMATAN & SOP -->
-            <div class="module-card bg-white rounded-2xl border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-brandRed-600 transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1">
-                <div>
-                    <div class="bg-navy-950 p-5 text-white relative border-b-4 border-brandRed-600">
-                        <div class="flex justify-between items-start">
-                            <div class="w-12 h-12 rounded-xl bg-brandRed-600 text-white flex items-center justify-center font-bold shadow-lg">
-                                <i data-lucide="shield-alert" class="w-6 h-6"></i>
-                            </div>
-                            <span class="bg-brandGold-500 text-navy-950 text-[11px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">FAIL 6</span>
-                        </div>
-                        <h3 class="text-xl font-bold mt-4 text-white">Keselamatan & SOP</h3>
-                        <p class="text-slate-300 text-xs mt-1">Manual Keselamatan Padang, Laporan Insiden & Penyelenggaraan</p>
-                    </div>
-
-                    <div class="p-5 space-y-2.5">
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>6.1 Manual & SOP Keselamatan Padang</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>6.2 Rekod Laporan Kecederaan</span>
-                        </div>
-                        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-                            <span class="w-2 h-2 rounded-full bg-brandRed-600"></span>
-                            <span>6.3 Penyelenggaraan Alatan & Tapak</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-5 pt-0">
-                    <button onclick="openDrawer('mod6')" class="w-full bg-navy-900 hover:bg-brandRed-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition duration-200 flex items-center justify-center space-x-2 shadow">
-                        <span>Buka Modul 6</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- Drawer Overlay and Content -->
-    <div id="drawerOverlay" class="fixed inset-0 bg-navy-950/70 backdrop-blur-sm z-40 hidden transition-opacity duration-300 opacity-0" onclick="closeDrawer()"></div>
-
-    <aside id="drawer" class="fixed top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
-        <div id="drawerHeader" class="p-6 text-white flex justify-between items-center bg-navy-950 border-b-4 border-brandGold-500">
-            <div class="space-y-1">
-                <span id="drawerBadge" class="text-[10px] font-black uppercase px-2.5 py-0.5 rounded bg-brandRed-600 text-white tracking-wider">FAIL 1</span>
-                <h2 id="drawerTitle" class="text-xl font-black text-white">Nama Modul</h2>
-                <p id="drawerSubtitle" class="text-xs text-slate-300">Keterangan submodul ringkas</p>
-            </div>
-            <button onclick="closeDrawer()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-        </div>
-
-        <div class="p-6 flex-grow overflow-y-auto custom-scrollbar space-y-6" id="drawerBody">
-            <!-- Dynamic Submodules JS Injection -->
-        </div>
-
-        <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-between items-center text-xs text-slate-500">
-            <span class="font-bold text-navy-950">SK SUNGAI BAKAS, MIRI • PANITIA PJK</span>
-            <button onclick="closeDrawer()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-lg transition">Tutup</button>
-        </div>
-    </aside>
-
-    <!-- MODAL: Carta Organisasi & Pengurusan Senarai Guru -->
-    <div id="orgModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border-4 border-brandGold-500 flex flex-col max-h-[90vh]">
-            <div class="p-5 bg-navy-950 text-white flex justify-between items-center border-b-2 border-brandRed-600">
-                <div class="flex items-center space-x-2">
-                    <i data-lucide="users" class="w-5 h-5 text-brandGold-400"></i>
-                    <h3 class="font-black text-lg text-white uppercase">Pengurusan Carta Organisasi & Guru PJK</h3>
-                </div>
-                <button onclick="closeModal('orgModal')" class="text-white/80 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-
-            <div class="p-6 overflow-y-auto custom-scrollbar space-y-6">
-                <!-- Add/Edit Guru Form (Admin Only or Interactive) -->
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
-                    <h4 class="text-xs font-black text-navy-950 uppercase flex items-center justify-between">
-                        <span>Tambah / Edit Maklumat Guru PJK</span>
-                        <span id="adminOnlyBadge" class="text-[10px] text-brandRed-600 font-bold bg-red-100 px-2 py-0.5 rounded">Diuruskan Panitia</span>
-                    </h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        <input type="text" id="teacherName" placeholder="Nama Guru..." class="bg-white border border-slate-300 rounded-xl p-2 text-xs">
-                        <input type="text" id="teacherRole" placeholder="Jawatan (Cth: Ketua Panitia)..." class="bg-white border border-slate-300 rounded-xl p-2 text-xs">
-                        <input type="text" id="teacherClasses" placeholder="Kelas Diajar (Cth: 4 Bakti, 5 Mulia)..." class="bg-white border border-slate-300 rounded-xl p-2 text-xs">
-                    </div>
-                    <button onclick="addOrUpdateTeacher()" class="w-full bg-navy-900 hover:bg-brandRed-600 text-white font-bold py-2 rounded-xl text-xs transition shadow-sm">
-                        + Simpan / Kemaskini Ahli Guru
-                    </button>
-                </div>
-
-                <!-- Active Teacher Roster Table -->
-                <div>
-                    <h4 class="text-xs font-black text-navy-950 uppercase mb-2">Senarai Ahli Jawatankuasa & Guru PJK</h4>
-                    <div class="overflow-x-auto rounded-xl border border-slate-200">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead class="bg-navy-950 text-white font-bold">
-                                <tr>
-                                    <th class="p-3">Nama Guru</th>
-                                    <th class="p-3">Jawatan Panitia</th>
-                                    <th class="p-3">Kelas Diajar</th>
-                                    <th class="p-3 text-center">Tindakan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="teacherTableBody" class="divide-y divide-slate-200 bg-white">
-                                <!-- Dynamic JS Injection -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-4 bg-slate-100 border-t border-slate-200 flex justify-end">
-                <button onclick="closeModal('orgModal')" class="bg-slate-300 hover:bg-slate-400 text-slate-800 px-4 py-2 rounded-xl text-xs font-bold transition">Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: Muat Naik & Paparan Jadual Waktu PJK -->
-    <div id="timetableModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border-4 border-emerald-500 flex flex-col max-h-[90vh]">
-            <div class="p-5 bg-navy-950 text-white flex justify-between items-center border-b-2 border-emerald-500">
-                <div class="flex items-center space-x-2">
-                    <i data-lucide="calendar" class="w-5 h-5 text-emerald-400"></i>
-                    <h3 class="font-black text-lg text-white uppercase">Pengurusan Jadual Waktu PJK</h3>
-                </div>
-                <button onclick="closeModal('timetableModal')" class="text-white/80 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-
-            <div class="p-6 overflow-y-auto custom-scrollbar space-y-4">
-                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                    <label class="block text-xs font-bold text-navy-950">Muat Naik Fail / Gambar Jadual Waktu PJK Terkini</label>
-                    <input type="file" id="timetableInput" accept="image/*,.pdf" onchange="handleTimetableUpload(event)" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
-                    <p class="text-[10px] text-slate-400">Format yang disokong: PNG, JPG, PDF (Maksimum 5MB)</p>
-                </div>
-
-                <!-- Display Box -->
-                <div id="timetablePreviewContainer" class="p-4 bg-slate-100 rounded-2xl border-2 border-dashed border-slate-300 text-center min-h-[220px] flex flex-col items-center justify-center">
-                    <img id="timetableImg" src="" class="max-h-[350px] w-auto object-contain rounded-xl hidden shadow-md">
-                    <div id="timetablePlaceholder" class="space-y-2 text-slate-400">
-                        <i data-lucide="file-spreadsheet" class="w-10 h-10 mx-auto text-slate-300"></i>
-                        <p class="text-xs font-semibold">Tiada imej jadual waktu dimuat naik lagi.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-4 bg-slate-100 border-t border-slate-200 flex justify-end">
-                <button onclick="closeModal('timetableModal')" class="bg-slate-300 hover:bg-slate-400 text-slate-800 px-4 py-2 rounded-xl text-xs font-bold transition">Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: Rekod Nama Murid & Ujian BMI (5-9T) / SEGAK (10-13T) -->
-    <div id="segakDataModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl border-4 border-brandRed-600 flex flex-col max-h-[90vh]">
-            <div class="p-5 bg-navy-950 text-white flex justify-between items-center border-b-2 border-brandGold-400">
-                <div class="flex items-center space-x-2">
-                    <i data-lucide="calculator" class="w-5 h-5 text-brandGold-400"></i>
-                    <h3 class="font-black text-lg text-white uppercase">Pengurusan Rekod BMI (5-9T) & SEGAK (10-13T)</h3>
-                </div>
-                <button onclick="closeModal('segakDataModal')" class="text-white/80 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-
-            <div class="p-6 overflow-y-auto custom-scrollbar space-y-6">
-                <!-- Add/Edit Student Form -->
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
-                    <h4 class="text-xs font-black text-navy-950 uppercase">Borang Input Nama & Markah Murid</h4>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                        <input type="text" id="studName" placeholder="Nama Murid..." class="bg-white border p-2 rounded-xl col-span-2">
-                        <select id="studClass" class="bg-white border p-2 rounded-xl font-medium">
-                            <option value="Tahun 1">Tahun 1</option>
-                            <option value="Tahun 2">Tahun 2</option>
-                            <option value="Tahun 3">Tahun 3</option>
-                            <option value="Tahun 4">Tahun 4</option>
-                            <option value="Tahun 5">Tahun 5</option>
-                            <option value="Tahun 6">Tahun 6</option>
-                        </select>
-                        <select id="studAge" class="bg-white border p-2 rounded-xl font-medium" onchange="toggleSegakFields()">
-                            <option value="5">5 Tahun (BMI 5-9T)</option>
-                            <option value="6">6 Tahun (BMI 5-9T)</option>
-                            <option value="7">7 Tahun (BMI 5-9T)</option>
-                            <option value="8">8 Tahun (BMI 5-9T)</option>
-                            <option value="9">9 Tahun (BMI 5-9T)</option>
-                            <option value="10">10 Tahun (SEGAK)</option>
-                            <option value="11">11 Tahun (SEGAK)</option>
-                            <option value="12">12 Tahun (SEGAK)</option>
-                            <option value="13">13 Tahun (SEGAK)</option>
-                        </select>
-                        <input type="number" id="studHeight" placeholder="Tinggi (cm)" class="bg-white border p-2 rounded-xl">
-                        <input type="number" id="studWeight" placeholder="Berat (kg)" class="bg-white border p-2 rounded-xl">
-                        <select id="studGender" class="bg-white border p-2 rounded-xl font-medium">
-                            <option value="L">Lelaki</option>
-                            <option value="P">Perempuan</option>
-                        </select>
-                        <!-- SEGAK Specific Scores -->
-                        <div id="segakOnlyFields" class="col-span-2 grid grid-cols-2 gap-2 hidden">
-                            <input type="number" id="studBench" placeholder="Bangku (bpm)" class="bg-white border p-2 rounded-xl">
-                            <input type="number" id="studPushup" placeholder="Tekan Tubi" class="bg-white border p-2 rounded-xl">
-                        </div>
-                    </div>
-                    <button onclick="saveStudentData()" class="w-full bg-brandRed-600 hover:bg-brandRed-700 text-white font-bold py-2 rounded-xl text-xs transition shadow-sm">
-                        + Simpan Rekod Murid
-                    </button>
-                </div>
-
-                <!-- Table Student Records -->
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <h4 class="text-xs font-black text-navy-950 uppercase">Senarai Rekod BMI & SEGAK Murid</h4>
-                        <select id="filterClass" onchange="renderStudentTable()" class="bg-slate-100 border rounded-xl p-1.5 text-xs font-bold">
-                            <option value="ALL">Semua Kelas</option>
-                            <option value="Tahun 1">Tahun 1</option>
-                            <option value="Tahun 2">Tahun 2</option>
-                            <option value="Tahun 3">Tahun 3</option>
-                            <option value="Tahun 4">Tahun 4</option>
-                            <option value="Tahun 5">Tahun 5</option>
-                            <option value="Tahun 6">Tahun 6</option>
-                        </select>
-                    </div>
-
-                    <div class="overflow-x-auto rounded-xl border border-slate-200">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead class="bg-navy-950 text-white font-bold">
-                                <tr>
-                                    <th class="p-2.5">Nama Murid</th>
-                                    <th class="p-2.5">Kelas / Umur</th>
-                                    <th class="p-2.5">BMI</th>
-                                    <th class="p-2.5">Kategori / Gred</th>
-                                    <th class="p-2.5 text-center">Tindakan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="studentTableBody" class="divide-y divide-slate-200 bg-white">
-                                <!-- Dynamic JS Injection -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-4 bg-slate-100 border-t border-slate-200 flex justify-end">
-                <button onclick="closeModal('segakDataModal')" class="bg-slate-300 hover:bg-slate-400 text-slate-800 px-4 py-2 rounded-xl text-xs font-bold transition">Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: QR Code Modal -->
-    <div id="qrModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border-4 border-brandGold-500">
-            <div class="p-5 bg-navy-950 text-white flex justify-between items-center border-b-2 border-brandRed-600">
-                <div class="flex items-center space-x-2">
-                    <i data-lucide="qr-code" class="w-5 h-5 text-brandGold-400"></i>
-                    <h3 class="font-black text-base text-white uppercase tracking-wider">Kod QR Paparan Pengunjung</h3>
-                </div>
-                <button onclick="closeModal('qrModal')" class="text-white/80 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-
-            <div id="printableQrArea" class="p-6 text-center space-y-4 bg-white">
-                <div class="flex flex-col items-center justify-center space-y-2">
-                    <div id="qrLogoContainer" class="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden">
-                        <img id="qrLogoImg" src="" alt="Logo" class="w-full h-full object-contain p-1 hidden">
-                        <i id="qrLogoPlaceholder" data-lucide="school" class="w-8 h-8 text-slate-400"></i>
-                    </div>
-                    <!-- Title Box on QR -->
-                    <div class="bg-brandGold-400 text-black font-black text-sm px-2.5 py-1 rounded-md uppercase tracking-tight">
-                        SK SUNGAI BAKAS, MIRI
-                    </div>
-                    <p class="text-xs font-bold text-brandRed-600 uppercase">PANITIA PENDIDIKAN JASMANI & KESIHATAN</p>
-                    <p class="text-[11px] font-extrabold text-brandGold-600">"BERUSAHA KE ARAH KEJAYAAN"</p>
-                </div>
-
-                <div class="p-4 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300 flex justify-center items-center my-2">
-                    <div id="qrcode" class="p-2 bg-white rounded-xl shadow-md"></div>
-                </div>
-
-                <p class="text-xs text-slate-600 font-medium">
-                    Imbas Kod QR di atas menggunakan kamera telefon untuk membuka portal ini.
-                </p>
-            </div>
-
-            <div class="p-4 bg-slate-100 border-t border-slate-200 flex justify-end space-x-2 no-print">
-                <button onclick="window.print()" class="bg-navy-900 hover:bg-navy-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow">
-                    <i data-lucide="printer" class="w-4 h-4 text-brandGold-400"></i>
-                    <span>Cetak Kad QR</span>
-                </button>
-                <button onclick="closeModal('qrModal')" class="bg-slate-300 hover:bg-slate-400 text-slate-800 px-4 py-2 rounded-xl text-xs font-bold transition">
-                    Tutup
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: Admin Authentication Modal -->
-    <div id="adminAuthModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full overflow-hidden shadow-2xl border-2 border-brandRed-600">
-            <div class="p-5 bg-navy-950 text-white flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-brandGold-400"></i>
-                    <h3 class="font-bold text-base text-white">Mod Pentadbir (Admin)</h3>
-                </div>
-                <button onclick="closeModal('adminAuthModal')" class="text-white/80 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <form onsubmit="handleAdminLogin(event)" class="p-6 space-y-4">
-                <p class="text-xs text-slate-600">
-                    Sila masukkan ID Admin dan Kata Laluan untuk mengaktifkan mod penyuntingan data panitia.
-                </p>
-                <div>
-                    <label class="block text-xs font-bold text-navy-950 mb-1">ID Admin</label>
-                    <input type="text" id="adminIdInput" placeholder="Masukkan ID Admin..." required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-brandRed-600 focus:outline-none mb-3">
-                    
-                    <label class="block text-xs font-bold text-navy-950 mb-1">Kata Laluan Admin</label>
-                    <input type="password" id="adminPasswordInput" placeholder="Masukkan katalaluan..." required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-brandRed-600 focus:outline-none">
-                    <p class="text-[10px] text-slate-400 mt-1">ID: <code class="bg-slate-200 px-1 py-0.5 rounded text-navy-950 font-bold">nita</code> | Katalaluan: <code class="bg-slate-200 px-1 py-0.5 rounded text-navy-950 font-bold">7232</code></p>
-                </div>
-                <button type="submit" class="w-full bg-brandRed-600 hover:bg-brandRed-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
-                    Sahkan & Aktifkan Mod Admin
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: Notice Add Modal -->
-    <div id="noticeModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200">
-            <div class="p-5 bg-navy-950 text-white flex justify-between items-center">
-                <h3 class="font-bold text-base text-white">Tambah Pengumuman Baharu</h3>
-                <button onclick="closeModal('noticeModal')" class="text-white/80 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <form onsubmit="saveNotice(event)" class="p-6 space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-navy-950 mb-1">Tajuk Pengumuman</label>
-                    <input type="text" id="noticeTitle" required placeholder="Cth: Pelaksanaan Ujian SEGAK 1/2026" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-navy-950 mb-1">Kandungan Pengumuman</label>
-                    <textarea id="noticeContent" rows="3" required placeholder="Butiran lanjut..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
-                    Simpan Pengumuman
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-navy-950 text-white px-5 py-3.5 rounded-2xl shadow-2xl z-50 flex items-center space-x-3 hidden border border-brandGold-500/40 transform transition duration-300 translate-y-10">
-        <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
-        <span id="toastMsg" class="text-xs font-semibold">Tindakan berjaya dilaksanakan!</span>
-    </div>
-
-    <script>
-        let isAdmin = false;
-        let qrGenerated = false;
-
-        // Teachers Database (Editable)
-        let teacherData = [
-            { name: "Cikgu Ahmad Razali", role: "Ketua Panitia PJK", classes: "Tahun 4 & 5" },
-            { name: "Cikgu Dayang Mastura", role: "Setiausaha Panitia", classes: "Tahun 1 & 2" },
-            { name: "Cikgu Mohamad Firdaus", role: "AJK SEGAK / Stok", classes: "Tahun 3 & 6" }
-        ];
-
-        // Students Database (BMI 5-9T & SEGAK 10-13T)
-        let studentData = [
-            { name: "Muhammad Adam", classVal: "Tahun 1", age: 7, height: 120, weight: 22, gender: "L", bmi: "15.3", status: "Berat Badan Normal" },
-            { name: "Nur Aisyah", classVal: "Tahun 4", age: 10, height: 138, weight: 34, gender: "P", bmi: "17.8", status: "Gred A - Sangat Cergas" }
-        ];
-
-        // Modules Static Structure
-        const moduleData = {
-            mod1: {
-                badge: "FAIL 1",
-                title: "Pengurusan & Pentadbiran",
-                subtitle: "Dokumen asas tadbir urus dan organisasi Panitia PJK SK Sungai Bakas, Miri",
-                submodules: [
-                    { code: "1.1", title: "Carta Organisasi Panitia PJK", desc: "Carta jawatankuasa Panitia PJK SK Sungai Bakas sesi 2026/2027.", actions: [{ text: "Lihat Carta Organisasi", icon: "users", actionFn: "openModal('orgModal')" }] },
-                    { code: "1.2", title: "Biodata & Senarai Guru PJK", desc: "Maklumat opsyen guru, jadual mengajar, dan perhubungan.", actions: [{ text: "Buka Senarai Guru", icon: "user-check", actionFn: "openModal('orgModal')" }] },
-                    { code: "1.3", title: "Pekeliling Ikhtisas (SPI PJK)", desc: "Pekeliling pakaian PJK, keselamatan padang dan arahan KPM.", actions: [{ text: "Buka Senarai SPI", icon: "file-text" }] },
-                    { code: "1.4", title: "Anggaran Belanja Mengurus (ABM)", desc: "Buku ABM, peruntukan PCG, Nota Minta dan invois alatan.", actions: [{ text: "Templat Nota Minta", icon: "file-spreadsheet" }] },
-                    { code: "1.5", title: "Inventori & Stok Alatan Sukan", desc: "Rekod KEW.PA alatan sukan sekolah dan borang pinjaman.", actions: [{ text: "Semak Stok Alatan", icon: "box" }] }
-                ]
-            },
-            mod2: {
-                badge: "FAIL 2",
-                title: "Mesyuarat Panitia",
-                subtitle: "Pengurusan mesyuarat berkala dan maklum balas tindakan",
-                submodules: [
-                    { code: "2.1", title: "Surat Panggilan Mesyuarat", desc: "Notis panggilan dan agenda Mesyuarat Panitia Bil 1 hingga 4.", actions: [{ text: "Surat Panggilan Bil 1/2026", icon: "mail" }] },
-                    { code: "2.2", title: "Minit Mesyuarat Panitia", desc: "Arkib Minit Mesyuarat rasmi Panitia PJK SK Sungai Bakas.", actions: [{ text: "Muat Turun Minit (PDF)", icon: "file-down" }] },
-                    { code: "2.3", title: "Maklum Balas Minit Mesyuarat", desc: "Laporan maklum balas tindakan guru bagi mesyuarat lalu.", actions: [{ text: "Borang Maklum Balas", icon: "edit-3" }] }
-                ]
-            },
-            mod3: {
-                badge: "FAIL 3",
-                title: "Kurikulum (DSKP & RPH)",
-                subtitle: "Dokumen standard, RPT dan panduan e-RPH",
-                submodules: [
-                    { code: "3.1", title: "DSKP KSSR Semakan PJK", desc: "Dokumen Standard Kurikulum & Pentaksiran Tahun 1 hingga 6.", actions: [{ text: "Muat Turun DSKP (ZIP)", icon: "archive" }] },
-                    { code: "3.2", title: "Rancangan Pelajaran Tahunan (RPT)", desc: "RPT PJK mengikut minggu persekolahan 2026/2027.", actions: [{ text: "Buka RPT Semasa", icon: "calendar" }] },
-                    { code: "3.3", title: "Templat Penulisan e-RPH", desc: "Format standard penulisan e-RPH PJK sekolah.", actions: [{ text: "Salin Format e-RPH", icon: "copy" }] }
-                ]
-            },
-            mod4: {
-                badge: "FAIL 4",
-                title: "Pentaksiran (PBD & SEGAK)",
-                subtitle: "Rekod transit PBD, BMI 5-9T, norma SEGAK dan bank soalan",
-                submodules: [
-                    { code: "4.1", title: "Pentaksiran Bilik Darjah (PBD)", desc: "Borang transit PBD dan rubrik pentaksiran amali PJK.", actions: [{ text: "Borang Transit Excel", icon: "file-spreadsheet" }] },
-                    { code: "4.2", title: "BMI (5-9T) & Ujian SEGAK", desc: "Rekod fizikal BMI murid Tahap 1 dan norma SEGAK Tahap 2.", actions: [{ text: "Buka Rekod Murid", icon: "calculator", actionFn: "openModal('segakDataModal')" }] },
-                    { code: "4.3", title: "Bank Soalan & Analisis Item", desc: "Koleksi soalan teori Pendidikan Kesihatan.", actions: [{ text: "Akses Bank Soalan", icon: "database" }] }
-                ]
-            },
-            mod5: {
-                badge: "FAIL 5",
-                title: "PLC & Program Panitia",
-                subtitle: "Perancangan PSO, Komuniti Pembelajaran & Laporan",
-                submodules: [
-                    { code: "5.1", title: "Perancangan Strategik (PSO)", desc: "Pelan Taktikal & Pelan Operasi Panitia PJK.", actions: [{ text: "Lihat Dokumen PSO", icon: "file-text" }] },
-                    { code: "5.2", title: "Komuniti Pembelajaran (PLC)", desc: "Laporan Lesson Study, Peer Coaching & Learning Walks.", actions: [{ text: "Borang Laporan PLC", icon: "plus-circle" }] },
-                    { code: "5.3", title: "Program & Laporan Impak Aktiviti", desc: "Kertas kerja & laporan gambar Bulan Cergas & Hari Sukan.", actions: [{ text: "Lihat Laporan Impak", icon: "file-check" }] }
-                ]
-            },
-            mod6: {
-                badge: "FAIL 6",
-                title: "Pengurusan Keselamatan & SOP",
-                subtitle: "Manual keselamatan padang, peralatan dan rekod insiden",
-                submodules: [
-                    { code: "6.1", title: "Manual & SOP Keselamatan Padang", desc: "Peraturan pakaian murid, keselamatan stor & gelanggang.", actions: [{ text: "Muat Turun SOP (PDF)", icon: "file-text" }] },
-                    { code: "6.2", title: "Rekod Laporan Kecederaan", desc: "Borang catatan insiden atau kecederaan murid semasa PJK.", actions: [{ text: "Borang Kecederaan", icon: "alert-circle" }] },
-                    { code: "6.3", title: "Penyelenggaraan Alatan & Tapak", desc: "Senarai semak pemeriksaan peralatan & tapak sukan.", actions: [{ text: "Senarai Semak Tapak", icon: "check-square" }] }
-                ]
-            }
-        };
-
-        // Notices List
-        let notices = [
-            { title: "Ujian SEGAK & Rekod BMI Penggal 1 2026", content: "Pengukuran tinggi & berat bagi murid Tahun 1-6 dijalankan mengikut jadual PJK.", date: "15 Mac 2026" }
-        ];
-
-        function triggerLogoSelect() {
-            document.getElementById('logoFileInput').click();
-        }
-
-        function handleLogoUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const dataUrl = e.target.result;
-                    localStorage.setItem('sksb_logo_data', dataUrl);
-                    applyLogoToUI(dataUrl);
-                    showToast("Logo sekolah berjaya dimuat naik & disimpan!");
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function applyLogoToUI(dataUrl) {
-            if (!dataUrl) return;
-
-            // Header Logo
-            const headerImg = document.getElementById('headerLogoImg');
-            const headerPlaceholder = document.getElementById('headerLogoPlaceholder');
-            if (headerImg && headerPlaceholder) {
-                headerImg.src = dataUrl;
-                headerImg.classList.remove('hidden');
-                headerPlaceholder.classList.add('hidden');
-            }
-
-            // QR Logo
-            const qrImg = document.getElementById('qrLogoImg');
-            const qrPlaceholder = document.getElementById('qrLogoPlaceholder');
-            if (qrImg && qrPlaceholder) {
-                qrImg.src = dataUrl;
-                qrImg.classList.remove('hidden');
-                qrPlaceholder.classList.add('hidden');
-            }
-        }
-
-        function renderTeachers() {
-            const body = document.getElementById('teacherTableBody');
-            body.innerHTML = teacherData.map((t, i) => `
-                <tr>
-                    <td class="p-3 font-bold text-navy-950">${t.name}</td>
-                    <td class="p-3 font-medium text-slate-600">${t.role}</td>
-                    <td class="p-3 font-medium text-slate-600">${t.classes}</td>
-                    <td class="p-3 text-center">
-                        <button onclick="deleteTeacher(${i})" class="text-brandRed-600 font-bold hover:underline text-[11px]">Padam</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function addOrUpdateTeacher() {
-            const name = document.getElementById('teacherName').value;
-            const role = document.getElementById('teacherRole').value;
-            const classes = document.getElementById('teacherClasses').value;
-
-            if (!name || !role) {
-                showToast("Sila masukkan nama dan jawatan guru.");
-                return;
-            }
-
-            teacherData.push({ name, role, classes: classes || "Tahun 1-6" });
-            renderTeachers();
-            document.getElementById('teacherName').value = '';
-            document.getElementById('teacherRole').value = '';
-            document.getElementById('teacherClasses').value = '';
-            showToast("Maklumat guru berjaya ditambah!");
-        }
-
-        function deleteTeacher(index) {
-            teacherData.splice(index, 1);
-            renderTeachers();
-            showToast("Rekod guru dipadam.");
-        }
-
-        function handleTimetableUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    const img = document.getElementById('timetableImg');
-                    const placeholder = document.getElementById('timetablePlaceholder');
-                    img.src = evt.target.result;
-                    img.classList.remove('hidden');
-                    placeholder.classList.add('hidden');
-                    showToast("Jadual Waktu dimuat naik!");
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function toggleSegakFields() {
-            const age = parseInt(document.getElementById('studAge').value);
-            const segakDiv = document.getElementById('segakOnlyFields');
-            if (age >= 10) {
-                segakDiv.classList.remove('hidden');
-            } else {
-                segakDiv.classList.add('hidden');
-            }
-        }
-
-        function saveStudentData() {
-            const name = document.getElementById('studName').value;
-            const classVal = document.getElementById('studClass').value;
-            const age = parseInt(document.getElementById('studAge').value);
-            const height = parseFloat(document.getElementById('studHeight').value);
-            const weight = parseFloat(document.getElementById('studWeight').value);
-            const gender = document.getElementById('studGender').value;
-
-            if (!name || !height || !weight) {
-                showToast("Sila lengkapkan nama, tinggi dan berat murid.");
-                return;
-            }
-
-            const bmi = (weight / ((height / 100) * (height / 100))).toFixed(1);
-            let status = "";
-
-            if (age < 10) {
-                // BMI 5-9T Classification Standard
-                if (bmi < 14.0) status = "Susut Berat Badan";
-                else if (bmi >= 14.0 && bmi < 18.0) status = "Berat Badan Normal";
-                else if (bmi >= 18.0 && bmi < 20.0) status = "Berisiko Berlebihan Berat";
-                else status = "Berlebihan Berat Badan / Obesiti";
-            } else {
-                // SEGAK (10-13T)
-                status = "Gred B - Cergas";
-                if (bmi >= 25) status = "Gred C - BMI Berlebihan";
-            }
-
-            studentData.push({ name, classVal, age, height, weight, gender, bmi, status });
-            renderStudentTable();
-            document.getElementById('studName').value = '';
-            document.getElementById('studHeight').value = '';
-            document.getElementById('studWeight').value = '';
-            showToast("Rekod murid disimpan!");
-        }
-
-        function renderStudentTable() {
-            const filter = document.getElementById('filterClass').value;
-            const tbody = document.getElementById('studentTableBody');
-
-            const filtered = filter === "ALL" ? studentData : studentData.filter(s => s.classVal === filter);
-
-            tbody.innerHTML = filtered.map((s, i) => `
-                <tr>
-                    <td class="p-2.5 font-bold text-navy-950">${s.name}</td>
-                    <td class="p-2.5 font-medium text-slate-600">${s.classVal} (${s.age}Thn / ${s.gender})</td>
-                    <td class="p-2.5 font-black text-brandRed-600">${s.bmi}</td>
-                    <td class="p-2.5 font-semibold text-emerald-700">${s.status}</td>
-                    <td class="p-2.5 text-center">
-                        <button onclick="deleteStudent(${i})" class="text-brandRed-600 font-bold hover:underline text-[11px]">Padam</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function deleteStudent(i) {
-            studentData.splice(i, 1);
-            renderStudentTable();
-            showToast("Rekod murid dipadam.");
-        }
-
-        function renderNotices() {
-            const list = document.getElementById('noticeList');
-            list.innerHTML = notices.map((n, index) => `
-                <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl relative group hover:border-brandRed-600 transition">
-                    <div class="flex justify-between items-start">
-                        <h4 class="font-bold text-xs text-navy-950">${n.title}</h4>
-                        <span class="text-[10px] text-slate-400 font-medium">${n.date}</span>
-                    </div>
-                    <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">${n.content}</p>
-                    ${isAdmin ? `<button onclick="deleteNotice(${index})" class="mt-2 text-[10px] text-brandRed-600 font-bold hover:underline">Padam Pengumuman</button>` : ''}
-                </div>
-            `).join('');
-        }
-
-        function openAdminAuthModal() {
-            if (isAdmin) {
-                isAdmin = false;
-                updateModeUI();
-                showToast("Mod Admin ditutup. Kembali ke Mod Pengunjung.");
-            } else {
-                openModal('adminAuthModal');
-            }
-        }
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const adminId = document.getElementById('adminIdInput').value;
-            const pass = document.getElementById('adminPasswordInput').value;
-            if (adminId === 'nita' && pass === '7232') {
-                isAdmin = true;
-                closeModal('adminAuthModal');
-                document.getElementById('adminIdInput').value = '';
-                document.getElementById('adminPasswordInput').value = '';
-                updateModeUI();
-                showToast("Mod Admin Aktif! Selamat datang, Cikgu Nita.");
-            } else {
-                showToast("ID atau Kata Laluan salah!");
-            }
-        }
-
-        function updateModeUI() {
-            const badge = document.getElementById('modeBadge');
-            const text = document.getElementById('modeText');
-            const btnText = document.getElementById('adminToggleText');
-            const addNoticeBtn = document.getElementById('addNoticeBtn');
-
-            if (isAdmin) {
-                badge.className = "w-2.5 h-2.5 rounded-full bg-brandGold-400 animate-ping";
-                text.innerHTML = 'Mod Paparan: <strong class="text-brandGold-400 uppercase tracking-wide">PENTADBIR (Penyuntingan Aktif)</strong>';
-                btnText.innerText = "Log Keluar Admin";
-                addNoticeBtn.classList.remove('hidden');
-            } else {
-                badge.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
-                text.innerHTML = 'Mod Paparan: <strong class="text-brandGold-400">Pengunjung (Baca Sahaja)</strong>';
-                btnText.innerText = "Log Masuk Admin";
-                addNoticeBtn.classList.add('hidden');
-            }
-            renderNotices();
-        }
-
-        function openDrawer(modKey) {
-            const data = moduleData[modKey];
-            if (!data) return;
-
-            document.getElementById('drawerBadge').innerText = data.badge;
-            document.getElementById('drawerTitle').innerText = data.title;
-            document.getElementById('drawerSubtitle').innerText = data.subtitle;
-
-            const bodyElem = document.getElementById('drawerBody');
-            bodyElem.innerHTML = data.submodules.map((sub) => `
-                <div class="p-4 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200 transition space-y-3">
-                    <div class="flex items-center space-x-2">
-                        <span class="px-2 py-0.5 rounded text-[11px] font-black bg-navy-900 text-brandGold-400">${sub.code}</span>
-                        <h4 class="font-bold text-navy-950 text-sm">${sub.title}</h4>
-                    </div>
-                    <p class="text-xs text-slate-600 leading-relaxed">${sub.desc}</p>
-                    <div class="flex flex-wrap gap-2 pt-1">
-                        ${sub.actions.map(act => `
-                            <button onclick="${act.actionFn || `triggerAction('${act.text}')`}" class="inline-flex items-center space-x-1.5 bg-white border border-slate-300 hover:border-brandRed-600 hover:text-brandRed-600 text-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm transition">
-                                <i data-lucide="${act.icon}" class="w-3.5 h-3.5"></i>
-                                <span>${act.text}</span>
-                            </button>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-
-            lucide.createIcons();
-
-            const overlay = document.getElementById('drawerOverlay');
-            const drawer = document.getElementById('drawer');
-            
-            overlay.classList.remove('hidden');
-            setTimeout(() => {
-                overlay.classList.remove('opacity-0');
-                drawer.classList.remove('translate-x-full');
-            }, 10);
-        }
-
-        function closeDrawer() {
-            const overlay = document.getElementById('drawerOverlay');
-            const drawer = document.getElementById('drawer');
-            drawer.classList.add('translate-x-full');
-            overlay.classList.add('opacity-0');
-            setTimeout(() => overlay.classList.add('hidden'), 300);
-        }
-
-        function openQrModal() {
-            openModal('qrModal');
-            if (!qrGenerated) {
-                const qrContainer = document.getElementById('qrcode');
-                qrContainer.innerHTML = '';
-                new QRCode(qrContainer, {
-                    text: window.location.href,
-                    width: 160,
-                    height: 160,
-                    colorDark: "#0f172a",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.H
-                });
-                qrGenerated = true;
-            }
-        }
-
-        function openNoticeModal() { openModal('noticeModal'); }
-
-        function saveNotice(e) {
-            e.preventDefault();
-            const title = document.getElementById('noticeTitle').value;
-            const content = document.getElementById('noticeContent').value;
-            const date = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' });
-
-            notices.unshift({ title, content, date });
-            renderNotices();
-            closeModal('noticeModal');
-            document.getElementById('noticeTitle').value = '';
-            document.getElementById('noticeContent').value = '';
-            showToast("Pengumuman berjaya ditambah!");
-        }
-
-        function deleteNotice(index) {
-            notices.splice(index, 1);
-            renderNotices();
-            showToast("Pengumuman dipadam.");
-        }
-
-        function openModal(id) {
-            const modal = document.getElementById(id);
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
-        }
-
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
-        }
-
-        function triggerAction(actionName) {
-            showToast(`Akses: "${actionName}" dibuka / didaftar.`);
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            toastMsg.innerText = message;
-            toast.classList.remove('hidden', 'translate-y-10');
-            setTimeout(() => {
-                toast.classList.add('translate-y-10');
-                setTimeout(() => toast.classList.add('hidden'), 300);
-            }, 3000);
-        }
-
-        function filterModules() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.module-card');
-            cards.forEach(card => {
-                const text = card.innerText.toLowerCase();
-                card.style.display = text.includes(query) ? "flex" : "none";
-            });
-        }
-
-        // Initialize App
-        window.onload = function() {
-            lucide.createIcons();
-            renderNotices();
-            renderTeachers();
-            renderStudentTable();
-
-            // Load saved logo if present
-            const savedLogo = localStorage.getItem('sksb_logo_data');
-            if (savedLogo) {
-                applyLogoToUI(savedLogo);
-            }
-        };
-    </script>
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+        if (item.level == 1) l1.innerHTML += cardHtml;
+        else if (item.level == 2) l2.innerHTML += cardHtml;
+        else if (item.level == 3) l3.innerHTML += cardHtml;
+        else l4.innerHTML += cardHtml;
+      });
+
+      lucide.createIcons();
+    }
+
+    function openOrgModal() {
+      document.getElementById('orgNameInput').value = '';
+      document.getElementById('orgRoleInput').value = '';
+      document.getElementById('orgModal').classList.remove('hidden');
+    }
+
+    function closeOrgModal() { document.getElementById('orgModal').classList.add('hidden'); }
+
+    function saveOrgMember() {
+      const name = document.getElementById('orgNameInput').value.trim();
+      const role = document.getElementById('orgRoleInput').value.trim();
+      const level = parseInt(document.getElementById('orgLevelInput').value);
+
+      if (name && role) {
+        orgData.push({ id: Date.now().toString(), name, role, level });
+        localStorage.setItem('sksb_org', JSON.stringify(orgData));
+        renderOrgTree();
+        closeOrgModal();
+      }
+    }
+
+    function deleteOrgMember(id) {
+      orgData = orgData.filter(i => i.id !== id);
+      localStorage.setItem('sksb_org', JSON.stringify(orgData));
+      renderOrgTree();
+    }
+
+    // QR MODAL
+    function openQRModal() {
+      document.getElementById('qrModal').classList.remove('hidden');
+      const qrel = document.getElementById('qrcode');
+      qrel.innerHTML = '';
+      new QRCode(qrel, {
+        text: window.location.href,
+        width: 160,
+        height: 160
+      });
+    }
+
+    function closeQRModal() { document.getElementById('qrModal').classList.add('hidden'); }
+
+    // MODULE SEARCH FILTER
+    function filterModules() {
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      document.querySelectorAll('.module-card').forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(term) ? 'block' : 'none';
+      });
+    }
+
+    function openModule(id) {
+      alert("Membuka Modul: " + id.toUpperCase() + "\n(Submodul & fail sedia untuk dimuat turun)");
+    }
+  </script>
 </body>
 </html>
