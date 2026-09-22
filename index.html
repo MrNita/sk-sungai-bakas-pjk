@@ -340,9 +340,10 @@
   <!-- MODAL: QR CODE -->
   <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center border border-slate-200 space-y-4">
-      <h3 class="font-bold text-slate-800 text-base">QR Kod Pelawat</h3>
+      <h3 class="font-bold text-slate-800 text-base">QR Kod Portal Panitia</h3>
       <div id="qrcode" class="flex justify-center p-3 bg-slate-50 border rounded-xl"></div>
-      <p class="text-xs text-slate-500">Imbas QR ini untuk terus ke portal Panitia PJK SK Sungai Bakas.</p>
+      <p id="qrUrlText" class="text-[11px] text-blue-600 font-medium break-all"></p>
+      <p class="text-xs text-slate-500">Imbas QR ini untuk mengakses portal Panitia PJK SK Sungai Bakas terkini.</p>
       <button onclick="closeQRModal()" class="w-full bg-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-xs">Tutup</button>
     </div>
   </div>
@@ -931,12 +932,24 @@
       renderGalleryGrid();
     }
 
-    // QR CODE MODAL
+    // DYNAMIC & FIXED URL QR CODE MODAL
     function openQRModal() {
       document.getElementById('qrModal').classList.remove('hidden');
       const qrel = document.getElementById('qrcode');
       qrel.innerHTML = '';
-      new QRCode(qrel, { text: window.location.href, width: 160, height: 160 });
+
+      // URL rasmi GitHub Pages
+      const targetUrl = "https://mrnita.github.io/sk-sungai-bakas-pjk/";
+      document.getElementById('qrUrlText').innerText = targetUrl;
+
+      new QRCode(qrel, { 
+        text: targetUrl, 
+        width: 170, 
+        height: 170,
+        colorDark: "#0B1329",
+        colorLight: "#FFFFFF",
+        correctLevel: QRCode.CorrectLevel.H
+      });
     }
     function closeQRModal() { document.getElementById('qrModal').classList.add('hidden'); }
 
