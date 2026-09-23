@@ -128,7 +128,7 @@
       </div>
 
       <!-- 6 MAIN MODULE BUTTONS -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div id="moduleGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         
         <div onclick="openModule('m1')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-blue-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
           <div class="flex items-center justify-between mb-3">
@@ -338,6 +338,91 @@
     </div>
   </div>
 
+  <!-- MODAL: DOKUMEN UPLOAD -->
+  <div id="docModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">Muat Naik Dokumen Baru</h3>
+      <input type="hidden" id="docCategoryInput">
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-slate-700 block mb-1">Tajuk Dokumen</label>
+          <input type="text" id="docTitleInput" placeholder="Contoh: Takwim Panitia 2026" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brandNavy-900">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-700 block mb-1">Pilih Fail (PDF / Doc / Image)</label>
+          <input type="file" id="docFileInput" class="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs">
+        </div>
+        <div class="flex gap-2 pt-2">
+          <button onclick="saveDocument()" class="flex-1 bg-brandNavy-900 text-white font-bold py-2 rounded-lg text-xs">Muat Naik</button>
+          <button onclick="closeDocModal()" class="flex-1 bg-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-xs">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: STUDENT DATA (SEGAK/BMI) -->
+  <div id="studentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">Tambah / Kemaskini Data Murid</h3>
+      <input type="hidden" id="studentEditId">
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Nama Murid</label>
+          <input type="text" id="studName" placeholder="Nama Penuh" class="w-full border rounded-lg px-3 py-2">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Tahun / Kelas</label>
+            <input type="text" id="studClass" placeholder="Contoh: 4 Bestari" class="w-full border rounded-lg px-3 py-2">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Umur (Tahun)</label>
+            <input type="number" id="studAge" placeholder="10" class="w-full border rounded-lg px-3 py-2">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Tinggi (cm)</label>
+            <input type="number" id="studHeight" placeholder="135" class="w-full border rounded-lg px-3 py-2">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Berat (kg)</label>
+            <input type="number" id="studWeight" placeholder="32" class="w-full border rounded-lg px-3 py-2">
+          </div>
+        </div>
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Skor Ujian SEGAK (Jika Berkenaan)</label>
+          <input type="text" id="studSegak" placeholder="Gred A / Cemerlang" class="w-full border rounded-lg px-3 py-2">
+        </div>
+        <div class="flex gap-2 pt-2">
+          <button onclick="saveStudentData()" class="flex-1 bg-amber-600 text-white font-bold py-2 rounded-lg">Simpan Data</button>
+          <button onclick="closeStudentModal()" class="flex-1 bg-slate-200 text-slate-700 font-semibold py-2 rounded-lg">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: GALLERY UPLOAD -->
+  <div id="galleryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">Muat Naik Foto Aktiviti / OPR</h3>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Tajuk Program / PLC</label>
+          <input type="text" id="galTitle" placeholder="Program Fit Malaysia SKSB" class="w-full border rounded-lg px-3 py-2">
+        </div>
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Gambar Aktiviti</label>
+          <input type="file" id="galFile" accept="image/*" class="w-full border rounded-lg px-2 py-1">
+        </div>
+        <div class="flex gap-2 pt-2">
+          <button onclick="saveGalleryImage()" class="flex-1 bg-purple-600 text-white font-bold py-2 rounded-lg">Simpan Foto</button>
+          <button onclick="closeGalleryModal()" class="flex-1 bg-slate-200 text-slate-700 font-semibold py-2 rounded-lg">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: QR CODE -->
   <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center border border-slate-200 space-y-4">
@@ -532,6 +617,16 @@
       lucide.createIcons();
     }
 
+    // SEARCH FILTER
+    function filterModules() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.module-card');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query) ? 'block' : 'none';
+      });
+    }
+
     // CARTA ORGANISASI SYSTEM
     function renderOrgTree() {
       const l1 = document.getElementById('treeLevel1');
@@ -631,15 +726,80 @@
       renderOrgTree();
     }
 
+    // DOCUMENT SYSTEM
+    function triggerFileUpload(category) {
+      document.getElementById('docCategoryInput').value = category;
+      document.getElementById('docTitleInput').value = '';
+      document.getElementById('docModal').classList.remove('hidden');
+    }
+
+    function closeDocModal() { document.getElementById('docModal').classList.add('hidden'); }
+
+    function saveDocument() {
+      const category = document.getElementById('docCategoryInput').value;
+      const title = document.getElementById('docTitleInput').value.trim();
+      const fileInput = document.getElementById('docFileInput');
+
+      if (!title || !fileInput.files[0]) return alert("Sila isi tajuk dan pilih fail.");
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        docsData.push({
+          id: Date.now().toString(),
+          category,
+          title,
+          fileData: e.target.result,
+          fileName: file.name,
+          date: new Date().toLocaleDateString()
+        });
+        closeDocModal();
+        openModule(currentActiveModule);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function deleteDoc(id) {
+      docsData = docsData.filter(d => d.id !== id);
+      openModule(currentActiveModule);
+    }
+
+    function renderDocList(category) {
+      const list = docsData.filter(d => d.category === category);
+      if (list.length === 0) return `<p class="text-xs text-slate-400 italic">Tiada dokumen dimuat naik lagi.</p>`;
+      
+      return list.map(d => `
+        <div class="flex items-center justify-between p-2.5 bg-slate-50 border rounded-lg text-xs">
+          <div class="flex items-center gap-2 overflow-hidden">
+            <i data-lucide="file-text" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>
+            <span class="font-medium text-slate-700 truncate">${d.title}</span>
+            <span class="text-[10px] text-slate-400">(${d.date})</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <a href="${d.fileData}" download="${d.fileName}" class="text-blue-600 hover:text-blue-800 font-bold text-[11px] flex items-center gap-0.5">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Muat Turun
+            </a>
+            ${isAdmin ? `
+              <button onclick="deleteDoc('${d.id}')" class="text-red-600 hover:text-red-800">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
     // RENDERERS FOR MODULE DASHBOARDS
     function renderModule1Content() {
       return `
         <div class="space-y-6">
           <div class="flex items-center justify-between">
             <h3 class="font-bold text-slate-800 text-sm sm:text-base">Dokumen Pengurusan, Jadual Waktu & Stok</h3>
-            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 1')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-4 h-4"></i> Muat Naik Dokumen / Jadual</button>` : ''}
+            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 1')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Dokumen</button>` : ''}
           </div>
-          ${renderDocListSection('Fail 1')}
+          <div class="space-y-2">
+            ${renderDocList('Fail 1')}
+          </div>
         </div>
       `;
     }
@@ -647,21 +807,13 @@
     function renderModule2Content() {
       return `
         <div class="space-y-6">
-          <div class="bg-slate-50 border rounded-xl p-5 space-y-4">
-            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4 text-brandRed-600"></i> Generator Notis Mesyuarat Panitia</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <input type="text" id="notisBil" placeholder="Bil. Mesyuarat (Contoh: 1/2026)" class="border rounded px-3 py-1.5 text-xs">
-              <input type="date" id="notisTarikh" class="border rounded px-3 py-1.5 text-xs">
-              <input type="time" id="notisMasa" class="border rounded px-3 py-1.5 text-xs">
-              <input type="text" id="notisTempat" placeholder="Tempat Mesyuarat" class="border rounded px-3 py-1.5 text-xs sm:col-span-2">
-              <button onclick="generateNotisLetter()" class="bg-brandNavy-900 text-white font-bold text-xs px-3 py-1.5 rounded shadow">Jana & Cetak Notis</button>
-            </div>
-          </div>
           <div class="flex items-center justify-between">
-            <h3 class="font-bold text-slate-800 text-sm">Minit Mesyuarat & Maklum Balas</h3>
-            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 2')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-4 h-4"></i> Muat Naik Minit</button>` : ''}
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Notis Mesyuarat, Minit & Maklum Balas</h3>
+            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 2')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Minit / Notis</button>` : ''}
           </div>
-          ${renderDocListSection('Fail 2')}
+          <div class="space-y-2">
+            ${renderDocList('Fail 2')}
+          </div>
         </div>
       `;
     }
@@ -670,10 +822,12 @@
       return `
         <div class="space-y-6">
           <div class="flex items-center justify-between">
-            <h3 class="font-bold text-slate-800 text-sm">DSKP, RPT & Templat e-RPH</h3>
-            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 3')" class="bg-emerald-600 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-4 h-4"></i> Muat Naik DSKP / RPT</button>` : ''}
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">DSKP, RPT & Templat e-RPH PJK</h3>
+            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 3')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Kurikulum</button>` : ''}
           </div>
-          ${renderDocListSection('Fail 3')}
+          <div class="space-y-2">
+            ${renderDocList('Fail 3')}
+          </div>
         </div>
       `;
     }
@@ -681,44 +835,26 @@
     function renderModule4Content() {
       return `
         <div class="space-y-6">
-          ${isAdmin ? `
-            <div class="bg-slate-50 border rounded-xl p-5 space-y-4">
-              <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4 text-amber-600"></i> Key-In Data Murid (BMI / SEGAK)</h3>
-              <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                <input type="text" id="stName" placeholder="Nama Murid" class="border rounded px-3 py-1.5 text-xs sm:col-span-2">
-                <select id="stClass" class="border rounded px-3 py-1.5 text-xs">
-                  <option value="Tahun 1">Tahun 1</option><option value="Tahun 2">Tahun 2</option>
-                  <option value="Tahun 3">Tahun 3</option><option value="Tahun 4">Tahun 4</option>
-                  <option value="Tahun 5">Tahun 5</option><option value="Tahun 6">Tahun 6</option>
-                </select>
-                <input type="number" id="stAge" placeholder="Umur (Tahun)" class="border rounded px-3 py-1.5 text-xs">
-                <input type="number" step="0.1" id="stWeight" placeholder="Berat (kg)" class="border rounded px-3 py-1.5 text-xs">
-                <input type="number" step="0.1" id="stHeight" placeholder="Tinggi (cm)" class="border rounded px-3 py-1.5 text-xs">
-                <input type="number" id="stSegak" placeholder="Skor SEGAK (10-13T)" class="border rounded px-3 py-1.5 text-xs">
-                <button onclick="addStudentData()" class="bg-amber-600 text-white font-bold text-xs px-3 py-1.5 rounded shadow">Simpan Data Murid</button>
-              </div>
-            </div>
-          ` : ''}
-
-          <div class="space-y-3">
-            <h3 class="font-bold text-slate-800 text-sm">Rekod Pentaksiran BMI & SEGAK Murid</h3>
-            <div class="overflow-x-auto border rounded-xl">
-              <table class="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr class="bg-slate-100 border-b text-slate-700">
-                    <th class="p-2.5">Nama Murid</th>
-                    <th class="p-2.5">Kelas</th>
-                    <th class="p-2.5">Umur</th>
-                    <th class="p-2.5">BMI</th>
-                    <th class="p-2.5">Status BMI (5-9T)</th>
-                    <th class="p-2.5">Skor SEGAK</th>
-                    <th class="p-2.5">Gred SEGAK</th>
-                    ${isAdmin ? `<th class="p-2.5 text-center">Tindakan</th>` : ''}
-                  </tr>
-                </thead>
-                <tbody id="studentTableBody"></tbody>
-              </table>
-            </div>
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Rekod Pentaksiran BMI (5-9T) & SEGAK (10-13T)</h3>
+            ${isAdmin ? `<button onclick="openStudentModal()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Tambah Data Murid</button>` : ''}
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-100 border-b text-slate-700">
+                  <th class="p-2.5">Nama Murid</th>
+                  <th class="p-2.5">Kelas</th>
+                  <th class="p-2.5">Umur</th>
+                  <th class="p-2.5">BMI</th>
+                  <th class="p-2.5">Status BMI</th>
+                  <th class="p-2.5">Skor SEGAK</th>
+                  ${isAdmin ? `<th class="p-2.5 text-right">Tindakan</th>` : ''}
+                </tr>
+              </thead>
+              <tbody id="studentTableBody">
+              </tbody>
+            </table>
           </div>
         </div>
       `;
@@ -727,25 +863,11 @@
     function renderModule5Content() {
       return `
         <div class="space-y-6">
-          <div class="bg-slate-50 border rounded-xl p-5 space-y-4">
-            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i data-lucide="file-check-2" class="w-4 h-4 text-purple-600"></i> Jana Laporan One Page Report (OPR)</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input type="text" id="oprNama" placeholder="Nama Program / PLC" class="border rounded px-3 py-1.5 text-xs">
-              <input type="date" id="oprTarikh" class="border rounded px-3 py-1.5 text-xs">
-              <input type="text" id="oprAnjuran" placeholder="Anjuran / Anjuran Bersama" class="border rounded px-3 py-1.5 text-xs">
-              <input type="text" id="oprObjektif" placeholder="Objektif Ringkas" class="border rounded px-3 py-1.5 text-xs">
-              <textarea id="oprImpak" placeholder="Impak / Ringkasan Aktiviti" class="border rounded px-3 py-1.5 text-xs sm:col-span-2 h-16"></textarea>
-              <button onclick="generateOPR()" class="bg-purple-600 text-white font-bold text-xs px-3 py-1.5 rounded shadow sm:col-span-2">Jana & Cetak OPR</button>
-            </div>
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Galeri Aktiviti, PLC & Laporan OPR</h3>
+            ${isAdmin ? `<button onclick="openGalleryModal()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="image" class="w-3.5 h-3.5"></i> Tambah Foto Aktiviti</button>` : ''}
           </div>
-
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="font-bold text-slate-800 text-sm">Galeri Aktiviti & Program</h3>
-              ${isAdmin ? `<button onclick="triggerGalleryUpload()" class="bg-purple-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="image-plus" class="w-4 h-4"></i> Muat Naik Gambar</button>` : ''}
-              <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="handleGalleryUpload(event)">
-            </div>
-            <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+          <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           </div>
         </div>
       `;
@@ -755,121 +877,83 @@
       return `
         <div class="space-y-6">
           <div class="flex items-center justify-between">
-            <h3 class="font-bold text-slate-800 text-sm">Surat Pekeliling Ikhtisas (SPI), Surat Panggilan & SOP</h3>
-            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 6')" class="bg-red-600 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-4 h-4"></i> Muat Naik Surat / SOP</button>` : ''}
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Manual Keselamatan, SOP & Surat Pekeliling</h3>
+            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 6')" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Dokumen SOP</button>` : ''}
           </div>
-          ${renderDocListSection('Fail 6')}
+          <div class="space-y-2">
+            ${renderDocList('Fail 6')}
+          </div>
         </div>
       `;
     }
 
-    // DOCUMENT UPLOAD MANAGER
-    function triggerFileUpload(modCategory) {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          docsData.push({
-            id: Date.now().toString(),
-            category: modCategory,
-            name: file.name,
-            date: new Date().toLocaleDateString('ms-MY')
-          });
-          openModule(currentActiveModule);
+    // STUDENT / SEGAK FUNCTIONS
+    function openStudentModal() {
+      document.getElementById('studentEditId').value = '';
+      document.getElementById('studName').value = '';
+      document.getElementById('studClass').value = '';
+      document.getElementById('studAge').value = '';
+      document.getElementById('studHeight').value = '';
+      document.getElementById('studWeight').value = '';
+      document.getElementById('studSegak').value = '';
+      document.getElementById('studentModal').classList.remove('hidden');
+    }
+
+    function closeStudentModal() { document.getElementById('studentModal').classList.add('hidden'); }
+
+    function saveStudentData() {
+      const editId = document.getElementById('studentEditId').value;
+      const name = document.getElementById('studName').value.trim();
+      const klass = document.getElementById('studClass').value.trim();
+      const age = parseInt(document.getElementById('studAge').value) || 0;
+      const height = parseFloat(document.getElementById('studHeight').value) || 0;
+      const weight = parseFloat(document.getElementById('studWeight').value) || 0;
+      const segak = document.getElementById('studSegak').value.trim();
+
+      if (!name || !height || !weight) return alert("Sila lengkapkan nama, tinggi dan berat.");
+
+      const bmi = (weight / Math.pow(height / 100, 2)).toFixed(1);
+      let bmiStatus = "Normal";
+      if (bmi < 18.5) bmiStatus = "Kurang Berat";
+      else if (bmi >= 25) bmiStatus = "Berlebihan Berat";
+
+      if (editId) {
+        const idx = studentData.findIndex(s => s.id === editId);
+        if (idx !== -1) {
+          studentData[idx] = { id: editId, name, klass, age, height, weight, bmi, bmiStatus, segak };
         }
-      };
-      input.click();
-    }
-
-    function renderDocListSection(category) {
-      const filtered = docsData.filter(d => d.category === category);
-      if (filtered.length === 0) {
-        return `<div class="p-8 text-center text-xs text-slate-400 border border-dashed rounded-xl">Tiada dokumen dimuat naik lagi.</div>`;
+      } else {
+        studentData.push({ id: Date.now().toString(), name, klass, age, height, weight, bmi, bmiStatus, segak });
       }
-      return `
-        <div class="space-y-2">
-          ${filtered.map(doc => `
-            <div class="flex items-center justify-between bg-slate-50 border p-3 rounded-lg text-xs">
-              <div class="flex items-center gap-2">
-                <i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i>
-                <div>
-                  <div class="font-bold text-slate-800">${doc.name}</div>
-                  <div class="text-[10px] text-slate-400">Tarikh: ${doc.date}</div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <button onclick="alert('Fail sedia untuk dimuat turun: ${doc.name}')" class="text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1"><i data-lucide="download" class="w-3.5 h-3.5"></i> Muat Turun</button>
-                ${isAdmin ? `<button onclick="deleteDoc('${doc.id}')" class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
 
-    function deleteDoc(id) {
-      docsData = docsData.filter(d => d.id !== id);
-      openModule(currentActiveModule);
-    }
-
-    // STUDENT BMI & SEGAK SYSTEM
-    function addStudentData() {
-      const name = document.getElementById('stName').value.trim();
-      const stClass = document.getElementById('stClass').value;
-      const age = parseInt(document.getElementById('stAge').value) || 0;
-      const weight = parseFloat(document.getElementById('stWeight').value) || 0;
-      const height = parseFloat(document.getElementById('stHeight').value) || 0;
-      const segakSkor = parseInt(document.getElementById('stSegak').value) || 0;
-
-      if (!name || weight <= 0 || height <= 0) return;
-
-      const heightM = height / 100;
-      const bmi = (weight / (heightM * heightM)).toFixed(1);
-      
-      let bmiStatus = 'Normal';
-      if (bmi < 14.0) bmiStatus = 'Kurang Berat';
-      else if (bmi >= 18.0 && bmi < 22.0) bmiStatus = 'Berlebihan Berat';
-      else if (bmi >= 22.0) bmiStatus = 'Obesiti';
-
-      let segakGred = 'Tiada';
-      if (segakSkor >= 20) segakGred = 'A (Sangat Tinggi)';
-      else if (segakSkor >= 15) segakGred = 'B (Tinggi)';
-      else if (segakSkor >= 10) segakGred = 'C (Sederhana)';
-      else if (segakSkor > 0) segakGred = 'D (Perlu Penambahbaikan)';
-
-      studentData.push({ id: Date.now().toString(), name, stClass, age, bmi, bmiStatus, segakSkor, segakGred });
+      closeStudentModal();
       renderStudentTable();
-
-      document.getElementById('stName').value = '';
-      document.getElementById('stWeight').value = '';
-      document.getElementById('stHeight').value = '';
     }
 
     function renderStudentTable() {
       const tbody = document.getElementById('studentTableBody');
       if (!tbody) return;
-      tbody.innerHTML = '';
 
       if (studentData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400">Tiada rekod murid.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400 italic">Tiada rekod murid.</td></tr>`;
         return;
       }
 
-      studentData.forEach(st => {
-        tbody.innerHTML += `
-          <tr class="border-b hover:bg-slate-50">
-            <td class="p-2.5 font-bold text-slate-800">${st.name}</td>
-            <td class="p-2.5">${st.stClass}</td>
-            <td class="p-2.5">${st.age} Thn</td>
-            <td class="p-2.5 font-semibold">${st.bmi}</td>
-            <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${st.bmiStatus === 'Normal' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${st.bmiStatus}</span></td>
-            <td class="p-2.5 font-semibold">${st.segakSkor}</td>
-            <td class="p-2.5">${st.segakGred}</td>
-            ${isAdmin ? `<td class="p-2.5 text-center"><button onclick="deleteStudent('${st.id}')" class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></td>` : ''}
-          </tr>
-        `;
-      });
+      tbody.innerHTML = studentData.map(s => `
+        <tr class="border-b hover:bg-slate-50">
+          <td class="p-2.5 font-bold text-slate-800">${s.name}</td>
+          <td class="p-2.5">${s.klass}</td>
+          <td class="p-2.5">${s.age} Thn</td>
+          <td class="p-2.5 font-semibold text-blue-600">${s.bmi}</td>
+          <td class="p-2.5"><span class="px-2 py-0.5 text-[10px] font-bold rounded ${s.bmiStatus === 'Normal' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${s.bmiStatus}</span></td>
+          <td class="p-2.5 font-medium">${s.segak || '-'}</td>
+          ${isAdmin ? `
+            <td class="p-2.5 text-right space-x-1">
+              <button onclick="deleteStudent('${s.id}')" class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i></button>
+            </td>
+          ` : ''}
+        </tr>
+      `).join('');
       lucide.createIcons();
     }
 
@@ -878,132 +962,79 @@
       renderStudentTable();
     }
 
-    // NOTIS LETTER GENERATOR
-    function generateNotisLetter() {
-      const bil = document.getElementById('notisBil').value || '1/2026';
-      const tarikh = document.getElementById('notisTarikh').value || '2026-03-30';
-      const masa = document.getElementById('notisMasa').value || '14:00';
-      const tempat = document.getElementById('notisTempat').value || 'Bilik Mesyuarat SK SB';
-
-      const pArea = document.getElementById('printableArea');
-      pArea.innerHTML = `
-        <div class="space-y-6 text-slate-900 leading-relaxed">
-          <div class="border-b-2 border-slate-900 pb-4 text-center space-y-1">
-            <h1 class="font-extrabold text-xl uppercase">SK SUNGAI BAKAS, MIRI</h1>
-            <p class="text-xs">NOTIS MESYUARAT PANITIA PENDIDIKAN JASMANI & KESIHATAN BIL ${bil}</p>
-          </div>
-          <div class="text-xs space-y-1">
-            <p><strong>Tarikh:</strong> ${tarikh}</p>
-            <p><strong>Masa:</strong> ${masa}</p>
-            <p><strong>Tempat:</strong> ${tempat}</p>
-          </div>
-          <p class="text-xs">Dengan segala hormatnya tuan/puan dijemput hadir ke Mesyuarat Panitia PJK Bil ${bil} bagi membincangkan perancangan kurikulum dan program sukan sekolah.</p>
-          <div class="pt-8 text-xs">
-            <p>Disediakan oleh,</p>
-            <p class="font-bold mt-10">( SETIAUSAHA PANITIA PJK )</p>
-            <p>SK Sungai Bakas, Miri</p>
-          </div>
-        </div>
-      `;
-      window.print();
+    // GALLERY FUNCTIONS
+    function openGalleryModal() {
+      document.getElementById('galTitle').value = '';
+      document.getElementById('galleryModal').classList.remove('hidden');
     }
 
-    // OPR GENERATOR
-    function generateOPR() {
-      const nama = document.getElementById('oprNama').value || 'Program Panitia';
-      const tarikh = document.getElementById('oprTarikh').value || '2026-03-30';
-      const anjuran = document.getElementById('oprAnjuran').value || 'Panitia PJK';
-      const objektif = document.getElementById('oprObjektif').value || 'Meningkatkan kecergasan murid.';
-      const impak = document.getElementById('oprImpak').value || 'Aktiviti berjalan dengan lancar.';
+    function closeGalleryModal() { document.getElementById('galleryModal').classList.add('hidden'); }
 
-      const pArea = document.getElementById('printableArea');
-      pArea.innerHTML = `
-        <div class="space-y-6 text-slate-900 border-4 border-slate-800 p-6">
-          <div class="bg-brandNavy-900 text-white p-3 text-center">
-            <h1 class="font-bold text-lg uppercase">ONE PAGE REPORT (OPR)</h1>
-            <p class="text-xs text-brandYellow-400">PANITIA PJK SK SUNGAI BAKAS, MIRI</p>
-          </div>
-          <div class="grid grid-cols-2 gap-4 text-xs border p-3 bg-slate-50">
-            <p><strong>Nama Program:</strong> ${nama}</p>
-            <p><strong>Tarikh:</strong> ${tarikh}</p>
-            <p><strong>Anjuran:</strong> ${anjuran}</p>
-            <p><strong>Objektif:</strong> ${objektif}</p>
-          </div>
-          <div class="border p-3 text-xs min-h-[100px]">
-            <strong>Impak / Laporan Ringkas:</strong>
-            <p class="mt-2">${impak}</p>
-          </div>
-        </div>
-      `;
-      window.print();
-    }
+    function saveGalleryImage() {
+      const title = document.getElementById('galTitle').value.trim();
+      const fileInput = document.getElementById('galFile');
 
-    // GALLERY
-    function triggerGalleryUpload() { document.getElementById('galleryInput').click(); }
-    function handleGalleryUpload(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          galleryData.push({ id: Date.now().toString(), src: evt.target.result });
-          renderGalleryGrid();
-        };
-        reader.readAsDataURL(file);
-      }
+      if (!title || !fileInput.files[0]) return alert("Sila lengkapkan tajuk dan pilih gambar.");
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        galleryData.push({
+          id: Date.now().toString(),
+          title,
+          image: e.target.result,
+          date: new Date().toLocaleDateString()
+        });
+        closeGalleryModal();
+        renderGalleryGrid();
+      };
+      reader.readAsDataURL(fileInput.files[0]);
     }
 
     function renderGalleryGrid() {
       const grid = document.getElementById('galleryGrid');
       if (!grid) return;
-      grid.innerHTML = '';
+
       if (galleryData.length === 0) {
-        grid.innerHTML = `<div class="col-span-4 text-center text-xs text-slate-400 py-6 border border-dashed rounded-xl">Tiada gambar galeri.</div>`;
+        grid.innerHTML = `<p class="col-span-3 text-xs text-slate-400 italic">Tiada foto dimuat naik.</p>`;
         return;
       }
-      galleryData.forEach(img => {
-        grid.innerHTML += `
-          <div class="relative group border rounded-lg overflow-hidden bg-slate-100 shadow-sm">
-            <img src="${img.src}" class="w-full h-28 object-cover">
-            ${isAdmin ? `<button onclick="deleteGallery('${img.id}')" class="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full shadow"><i data-lucide="trash-2" class="w-3 h-3"></i></button>` : ''}
+
+      grid.innerHTML = galleryData.map(g => `
+        <div class="bg-slate-50 border rounded-xl overflow-hidden shadow-sm flex flex-col">
+          <img src="${g.image}" class="w-full h-36 object-cover">
+          <div class="p-3 flex-1 flex flex-col justify-between">
+            <h4 class="font-bold text-xs text-slate-800">${g.title}</h4>
+            <div class="flex items-center justify-between mt-2 pt-2 border-t text-[10px] text-slate-400">
+              <span>${g.date}</span>
+              ${isAdmin ? `<button onclick="deleteGalleryItem('${g.id}')" class="text-red-600 hover:text-red-800 font-semibold">Padam</button>` : ''}
+            </div>
           </div>
-        `;
-      });
-      lucide.createIcons();
+        </div>
+      `).join('');
     }
 
-    function deleteGallery(id) {
+    function deleteGalleryItem(id) {
       galleryData = galleryData.filter(g => g.id !== id);
       renderGalleryGrid();
     }
 
-    // DYNAMIC & FIXED URL QR CODE MODAL
+    // QR MODAL
     function openQRModal() {
+      const container = document.getElementById('qrcode');
+      container.innerHTML = '';
+      const currentUrl = window.location.href;
+      document.getElementById('qrUrlText').innerText = currentUrl;
+
+      new QRCode(container, {
+        text: currentUrl,
+        width: 160,
+        height: 160
+      });
+
       document.getElementById('qrModal').classList.remove('hidden');
-      const qrel = document.getElementById('qrcode');
-      qrel.innerHTML = '';
-
-      const targetUrl = "https://mrnita.github.io/sk-sungai-bakas-pjk/";
-      document.getElementById('qrUrlText').innerText = targetUrl;
-
-      new QRCode(qrel, { 
-        text: targetUrl, 
-        width: 170, 
-        height: 170,
-        colorDark: "#0B1329",
-        colorLight: "#FFFFFF",
-        correctLevel: QRCode.CorrectLevel.H
-      });
     }
+
     function closeQRModal() { document.getElementById('qrModal').classList.add('hidden'); }
-
-    // SEARCH FILTER
-    function filterModules() {
-      const term = document.getElementById('searchInput').value.toLowerCase();
-      document.querySelectorAll('.module-card').forEach(card => {
-        const text = card.innerText.toLowerCase();
-        card.style.display = text.includes(term) ? 'block' : 'none';
-      });
-    }
   </script>
 </body>
 </html>
