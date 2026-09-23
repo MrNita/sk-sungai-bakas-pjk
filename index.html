@@ -127,6 +127,49 @@
         </div>
       </div>
 
+      <!-- ANALYTICS SUMMARY BANNER (ADD-ON) -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex items-center gap-3">
+          <div class="bg-blue-100 p-2.5 rounded-lg text-blue-600">
+            <i data-lucide="users" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div id="statMembers" class="text-lg font-bold text-slate-800">0</div>
+            <div class="text-[10px] text-slate-500 font-medium uppercase">Ahli Panitia</div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex items-center gap-3">
+          <div class="bg-indigo-100 p-2.5 rounded-lg text-indigo-600">
+            <i data-lucide="file-text" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div id="statDocs" class="text-lg font-bold text-slate-800">0</div>
+            <div class="text-[10px] text-slate-500 font-medium uppercase">Dokumen Muat Naik</div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex items-center gap-3">
+          <div class="bg-amber-100 p-2.5 rounded-lg text-amber-600">
+            <i data-lucide="user-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div id="statStudents" class="text-lg font-bold text-slate-800">0</div>
+            <div class="text-[10px] text-slate-500 font-medium uppercase">Rekod Murid</div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex items-center gap-3">
+          <div class="bg-purple-100 p-2.5 rounded-lg text-purple-600">
+            <i data-lucide="image" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div id="statGallery" class="text-lg font-bold text-slate-800">0</div>
+            <div class="text-[10px] text-slate-500 font-medium uppercase">Gambar Aktiviti</div>
+          </div>
+        </div>
+      </div>
+
       <!-- MODULE BUTTONS -->
       <div id="moduleGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         
@@ -236,7 +279,7 @@
 
     <!-- MODULE DETAILED DASHBOARDS -->
     <div id="viewModuleDetail" class="hidden space-y-6">
-      <div class="flex items-center justify-between bg-white p-4 rounded-xl border shadow-sm">
+      <div class="flex items-center justify-between bg-white p-4 rounded-xl border shadow-sm flex-wrap gap-2">
         <button onclick="showMainHome()" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 bg-slate-100 px-3 py-1.5 rounded-lg border">
           <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Utama
         </button>
@@ -492,6 +535,7 @@
           
           renderLogo();
           renderOrgBoxes();
+          updateAnalyticsStats();
           if(!document.getElementById('viewModuleDetail').classList.contains('hidden')) {
             openModule(currentActiveModule);
           }
@@ -518,6 +562,7 @@
       db.collection("portal_pjk").doc("master_data").set(payload)
         .then(() => {
           saveBtn.innerText = "SIMPAN KE LIVE WEBSITE";
+          updateAnalyticsStats();
           alert("BERJAYA! Semua kemas kini anda telah disimpan ke Live Website.");
         })
         .catch((err) => {
@@ -525,6 +570,14 @@
           console.error("Cloud Save Error:", err);
           alert("Gagal menyimpan ke Live Website: " + err.message);
         });
+    }
+
+    // UPDATE STATS DASHBOARD
+    function updateAnalyticsStats() {
+      document.getElementById('statMembers').innerText = orgData.length;
+      document.getElementById('statDocs').innerText = docsData.length;
+      document.getElementById('statStudents').innerText = studentData.length;
+      document.getElementById('statGallery').innerText = galleryData.length;
     }
 
     // LOGO SYSTEM
@@ -597,6 +650,7 @@
     function showMainHome() {
       document.getElementById('viewHome').classList.remove('hidden');
       document.getElementById('viewModuleDetail').classList.add('hidden');
+      updateAnalyticsStats();
     }
 
     let currentActiveModule = '';
@@ -643,7 +697,7 @@
       });
     }
 
-    // NEW CARTA ORGANISASI SYSTEM: SIDE-BY-SIDE SYSTEM BOX GRID
+    // CARTA ORGANISASI SYSTEM
     function renderOrgBoxes() {
       const container = document.getElementById('orgBoxesContainer');
       if (!container) return;
@@ -805,7 +859,7 @@
       if (list.length === 0) return `<p class="text-xs text-slate-400 italic">Tiada dokumen dimuat naik lagi.</p>`;
       
       return list.map(d => `
-        <div class="flex items-center justify-between p-2.5 bg-slate-50 border rounded-lg text-xs">
+        <div class="flex items-center justify-between p-2.5 bg-slate-50 border rounded-lg text-xs hover:bg-slate-100 transition">
           <div class="flex items-center gap-2 overflow-hidden">
             <i data-lucide="file-text" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>
             <span class="font-medium text-slate-700 truncate">${d.title}</span>
@@ -829,9 +883,9 @@
     function renderModule1Content() {
       return `
         <div class="space-y-6">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between flex-wrap gap-2">
             <h3 class="font-bold text-slate-800 text-sm sm:text-base">Dokumen Pengurusan, Jadual Waktu & Stok</h3>
-            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 1')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Dokumen</button>` : ''}
+            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 1')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Dokumen</button>` : ''}
           </div>
           <div class="space-y-2">${renderDocList('Fail 1')}</div>
         </div>
@@ -841,9 +895,9 @@
     function renderModule2Content() {
       return `
         <div class="space-y-6">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between flex-wrap gap-2">
             <h3 class="font-bold text-slate-800 text-sm sm:text-base">Notis Mesyuarat, Minit & Maklum Balas</h3>
-            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 2')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Minit / Notis</button>` : ''}
+            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 2')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Minit / Notis</button>` : ''}
           </div>
           <div class="space-y-2">${renderDocList('Fail 2')}</div>
         </div>
@@ -853,9 +907,9 @@
     function renderModule3Content() {
       return `
         <div class="space-y-6">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between flex-wrap gap-2">
             <h3 class="font-bold text-slate-800 text-sm sm:text-base">DSKP, RPT & Templat e-RPH PJK</h3>
-            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 3')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Kurikulum</button>` : ''}
+            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 3')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Kurikulum</button>` : ''}
           </div>
           <div class="space-y-2">${renderDocList('Fail 3')}</div>
         </div>
@@ -867,7 +921,12 @@
         <div class="space-y-6">
           <div class="flex items-center justify-between flex-wrap gap-2">
             <h3 class="font-bold text-slate-800 text-sm sm:text-base">Rekod Pentaksiran BMI (5-9T) & SEGAK (10-13T)</h3>
-            ${isAdmin ? `<button onclick="openStudentModal()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Tambah Data Murid</button>` : ''}
+            <div class="flex items-center gap-2">
+              <button onclick="exportStudentsToCSV()" class="bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV
+              </button>
+              ${isAdmin ? `<button onclick="openStudentModal()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"><i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Tambah Data Murid</button>` : ''}
+            </div>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs border-collapse">
@@ -892,9 +951,9 @@
     function renderModule5Content() {
       return `
         <div class="space-y-6">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between flex-wrap gap-2">
             <h3 class="font-bold text-slate-800 text-sm sm:text-base">Galeri Aktiviti, PLC & Laporan OPR</h3>
-            ${isAdmin ? `<button onclick="openGalleryModal()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="image" class="w-3.5 h-3.5"></i> Tambah Foto Aktiviti</button>` : ''}
+            ${isAdmin ? `<button onclick="openGalleryModal()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"><i data-lucide="image" class="w-3.5 h-3.5"></i> Tambah Foto Aktiviti</button>` : ''}
           </div>
           <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
         </div>
@@ -904,9 +963,9 @@
     function renderModule6Content() {
       return `
         <div class="space-y-6">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between flex-wrap gap-2">
             <h3 class="font-bold text-slate-800 text-sm sm:text-base">Manual Keselamatan, SOP & Surat Pekeliling</h3>
-            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 6')" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Dokumen SOP</button>` : ''}
+            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 6')" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Dokumen SOP</button>` : ''}
           </div>
           <div class="space-y-2">${renderDocList('Fail 6')}</div>
         </div>
@@ -990,6 +1049,24 @@
         renderStudentTable();
         saveDataToCloud();
       }
+    }
+
+    // EXPORT STUDENT CSV (ADD-ON FEATURE)
+    function exportStudentsToCSV() {
+      if (studentData.length === 0) return alert("Tiada data murid untuk di-export.");
+
+      let csvContent = "data:text/csv;charset=utf-8,Nama,Kelas,Umur,Tinggi(cm),Berat(kg),BMI,Status BMI,Skor SEGAK\n";
+      studentData.forEach(s => {
+        csvContent += `"${s.name}","${s.klass}",${s.age},${s.height},${s.weight},${s.bmi},"${s.bmiStatus}","${s.segak}"\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Rekod_SEGAK_BMI_SK_Sungai_Bakas_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     // GALLERY FUNCTIONS
