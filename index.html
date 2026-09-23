@@ -11,8 +11,8 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- QRCode.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- Font Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Inter & Extra Bold Display Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
   
   <!-- Firebase SDK (Compat Mode) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -22,11 +22,15 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          fontFamily: { 
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif']
+          },
           colors: {
-            brandNavy: { 900: '#0B1329', 800: '#0F172A', 700: '#1E293B' },
-            brandRed: { 600: '#DC2626', 700: '#B91C1C' },
-            brandYellow: { 400: '#FACC15', 500: '#EAB308' }
+            brandNavy: { 900: '#070C1A', 800: '#0F172A', 700: '#1E293B' },
+            brandRed: { 600: '#DC2626', 700: '#B91C1C', 900: '#7F1D1D' },
+            brandYellow: { 400: '#FACC15', 500: '#EAB308' },
+            oprHeader: '#1E3A8A'
           }
         }
       }
@@ -36,48 +40,76 @@
     @media print {
       body * { visibility: hidden; }
       #printableArea, #printableArea * { visibility: visible; }
-      #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
+      #printableArea { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
       .no-print { display: none !important; }
+    }
+    .custom-title-shadow {
+      text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.7);
+    }
+    /* OPR Print Styling */
+    .opr-table-header {
+      background-color: #1E3A8A !important;
+      color: #ffffff !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* Floating Interactive Sub-Box Animation */
+    .floating-card {
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .floating-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .floating-card .icon-animate {
+      transition: transform 0.3s ease;
+    }
+    .floating-card:hover .icon-animate {
+      transform: scale(1.15) rotate(5deg);
     }
   </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
 
   <!-- TOP HEADER -->
-  <header class="bg-brandNavy-900 text-white shadow-lg sticky top-0 z-40 no-print">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+  <header class="bg-gradient-to-r from-[#0a1122] via-[#0d172e] to-[#7f1d1d] text-white shadow-xl sticky top-0 z-40 border-b border-slate-800/80 no-print">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
       
-      <!-- LOGO & TITLE SECTION -->
-      <div class="flex items-center gap-3">
+      <!-- LOGO & BRAND TITLE -->
+      <div class="flex items-center gap-3.5">
         <div class="relative group cursor-pointer" onclick="triggerLogoUpload()" title="Klik untuk muat naik logo">
-          <div id="logoContainer" class="w-12 h-12 sm:w-14 sm:h-14 bg-slate-800 border-2 border-brandYellow-400 rounded-lg flex flex-col items-center justify-center overflow-hidden shadow-inner text-center p-1">
-            <i data-lucide="image-plus" class="w-5 h-5 text-brandYellow-400"></i>
-            <span class="text-[9px] text-slate-300 font-medium leading-none mt-1">Logo</span>
+          <div id="logoContainer" class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex flex-col items-center justify-center overflow-hidden text-center p-1 border-2 border-brandYellow-400/60 bg-black/30 shadow-md">
+            <i data-lucide="shield" class="w-6 h-6 text-brandYellow-400"></i>
+            <span class="text-[8px] text-slate-300 font-medium leading-none mt-1">Logo</span>
           </div>
           <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
         </div>
 
-        <div>
-          <div class="bg-brandRed-600 text-white font-black px-3 py-1 rounded shadow-md border border-brandRed-700 tracking-wide text-xs sm:text-base md:text-lg leading-snug uppercase">
-            PANITIA PJK - SK SUNGAI BAKAS, MIRI
-          </div>
-          <div class="text-brandYellow-400 font-extrabold text-[10px] sm:text-xs tracking-wider uppercase mt-0.5 flex items-center gap-2">
-            <span>BERUSAHA KE ARAH KEJAYAAN</span>
-            <span id="liveStatusBadge" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] px-1.5 py-0.2 rounded flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> LIVE SYNC ACTIVE
-            </span>
+        <div class="flex flex-col justify-center">
+          <h1 class="font-display font-black text-brandYellow-400 text-xl sm:text-2xl md:text-3xl tracking-wide uppercase leading-none custom-title-shadow">
+            PANITIA PJK
+          </h1>
+          <p class="font-display font-extrabold text-white text-xs sm:text-sm md:text-base tracking-wider uppercase mt-1 leading-snug drop-shadow-md">
+            SK SUNGAI BAKAS, MIRI
+          </p>
+          
+          <div id="liveStatusBadge" class="mt-1 inline-flex items-center gap-1.5 text-[9px] text-emerald-400 font-semibold tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>BERUSAHA KE ARAH KEJAYAAN • LIVE SYNC</span>
           </div>
         </div>
       </div>
 
-      <!-- CONTROLS & LOGIN -->
+      <!-- NAVIGATION & CONTROLS -->
       <div class="flex items-center gap-2 flex-wrap ml-auto">
-        <button onclick="showMainHome()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition">
+        <button onclick="showMainHome()" class="bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
           <i data-lucide="home" class="w-4 h-4"></i>
           <span>Utama</span>
         </button>
 
-        <button onclick="openQRModal()" class="bg-brandNavy-800 hover:bg-slate-800 text-brandYellow-400 border border-brandYellow-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow">
+        <button onclick="openQRModal()" class="bg-slate-900/80 hover:bg-slate-800 text-brandYellow-400 border border-brandYellow-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow">
           <i data-lucide="qr-code" class="w-4 h-4"></i>
           <span>QR Kod</span>
         </button>
@@ -88,11 +120,11 @@
           <span id="saveBtnText">SIMPAN KE LIVE WEBSITE</span>
         </button>
 
-        <div id="adminStatusBadge" class="hidden bg-emerald-900/80 text-emerald-300 border border-emerald-500/40 text-xs px-2.5 py-1 rounded-md font-semibold flex items-center gap-1">
+        <div id="adminStatusBadge" class="hidden bg-emerald-900/90 text-emerald-300 border border-emerald-500/50 text-xs px-2.5 py-1 rounded-md font-semibold flex items-center gap-1 shadow-sm">
           <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Admin Active
         </div>
 
-        <button id="loginBtn" onclick="openLoginModal()" class="bg-brandYellow-500 hover:bg-brandYellow-400 text-brandNavy-900 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
+        <button id="loginBtn" onclick="openLoginModal()" class="bg-brandYellow-500 hover:bg-brandYellow-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
           <i data-lucide="lock" class="w-3.5 h-3.5"></i>
           <span>Log Masuk Admin</span>
         </button>
@@ -112,13 +144,13 @@
     <div id="viewHome" class="space-y-6">
       
       <!-- HERO BANNER -->
-      <div class="bg-gradient-to-r from-brandNavy-900 via-brandNavy-800 to-brandRed-700 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="bg-gradient-to-r from-brandNavy-900 via-brandNavy-800 to-brandRed-700 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-800">
         <div class="space-y-1 text-center md:text-left">
           <span class="inline-block bg-brandYellow-400 text-brandNavy-900 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
             Sistem Pengurusan Digital Panitia (Real-Time Cloud)
           </span>
-          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Portal Panitia PJK</h1>
-          <p class="text-slate-300 text-xs sm:text-sm">Pengurusan fail panitia, pentaksiran SEGAK & BMI, PLC, jadual & rekod sukan sekolah.</p>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Portal Panitia PJK</h2>
+          <p class="text-slate-300 text-xs sm:text-sm">Pengurusan fail panitia, pentaksiran SEGAK & BMI, PLC & Penjana OPR Rasmi.</p>
         </div>
 
         <div class="w-full md:w-80 relative">
@@ -127,7 +159,7 @@
         </div>
       </div>
 
-      <!-- ANALYTICS SUMMARY BANNER (ADD-ON) -->
+      <!-- ANALYTICS SUMMARY BANNER -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex items-center gap-3">
           <div class="bg-blue-100 p-2.5 rounded-lg text-blue-600">
@@ -161,99 +193,101 @@
 
         <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex items-center gap-3">
           <div class="bg-purple-100 p-2.5 rounded-lg text-purple-600">
-            <i data-lucide="image" class="w-5 h-5"></i>
+            <i data-lucide="file-check-2" class="w-5 h-5"></i>
           </div>
           <div>
             <div id="statGallery" class="text-lg font-bold text-slate-800">0</div>
-            <div class="text-[10px] text-slate-500 font-medium uppercase">Gambar Aktiviti</div>
+            <div class="text-[10px] text-slate-500 font-medium uppercase">Laporan OPR / Gambar</div>
           </div>
         </div>
       </div>
 
-      <!-- MODULE BUTTONS -->
-      <div id="moduleGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- MODULE BUTTONS (FAIL 1 UNTUK FAIL 5 SAHAJA - SUB-BOX FLOATING INTERAKTIF) -->
+      <div id="moduleGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        <div onclick="openModule('m1')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-blue-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold px-2 py-0.5 bg-blue-100 text-blue-700 rounded">Fail 1</span>
-            <i data-lucide="folder-kanban" class="w-6 h-6 text-blue-600"></i>
+        <!-- FAIL 1 -->
+        <div onclick="openModule('m1')" class="module-card floating-card bg-white rounded-2xl shadow-md border-t-4 border-blue-600 p-6 cursor-pointer border border-slate-100 hover:border-blue-300">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-black px-3 py-1 bg-blue-100 text-blue-800 rounded-full uppercase tracking-wider">FAIL 1</span>
+            <div class="bg-blue-50 p-3 rounded-xl text-blue-600 icon-animate">
+              <i data-lucide="folder-kanban" class="w-7 h-7"></i>
+            </div>
           </div>
-          <h3 class="font-bold text-slate-800 text-base mb-1">Pengurusan & Pentadbiran</h3>
-          <p class="text-xs text-slate-500 mb-4">Carta organisasi, biodata guru, SPI, ABM & jadual waktu PJK.</p>
-          <div class="text-xs font-semibold text-blue-600 flex items-center gap-1">
-            <span>Buka Modul</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </div>
-        </div>
-
-        <div onclick="openModule('m2')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-indigo-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded">Fail 2</span>
-            <i data-lucide="users-2" class="w-6 h-6 text-indigo-600"></i>
-          </div>
-          <h3 class="font-bold text-slate-800 text-base mb-1">Mesyuarat Panitia</h3>
-          <p class="text-xs text-slate-500 mb-4">Jana notis mesyuarat automatik, minit mesyuarat 1-4 & maklum balas.</p>
-          <div class="text-xs font-semibold text-indigo-600 flex items-center gap-1">
-            <span>Buka Modul</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <h3 class="font-extrabold text-slate-800 text-lg mb-1.5 group-hover:text-blue-600 transition">Pengurusan & Pentadbiran</h3>
+          <p class="text-xs text-slate-500 mb-5 leading-relaxed">Carta organisasi, biodata guru, Surat Pekeliling Ikhtisas (SPI), Anggaran Belanja Mengurus (ABM) & jadual waktu PJK.</p>
+          <div class="text-xs font-bold text-blue-600 flex items-center gap-1.5 pt-2 border-t border-slate-100">
+            <span>Akses Fail 1</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
           </div>
         </div>
 
-        <div onclick="openModule('m3')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-emerald-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded">Fail 3</span>
-            <i data-lucide="book-open-check" class="w-6 h-6 text-emerald-600"></i>
+        <!-- FAIL 2 -->
+        <div onclick="openModule('m2')" class="module-card floating-card bg-white rounded-2xl shadow-md border-t-4 border-indigo-600 p-6 cursor-pointer border border-slate-100 hover:border-indigo-300">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-black px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full uppercase tracking-wider">FAIL 2</span>
+            <div class="bg-indigo-50 p-3 rounded-xl text-indigo-600 icon-animate">
+              <i data-lucide="users-2" class="w-7 h-7"></i>
+            </div>
           </div>
-          <h3 class="font-bold text-slate-800 text-base mb-1">Kurikulum (DSKP & RPH)</h3>
-          <p class="text-xs text-slate-500 mb-4">Muat naik & muat turun DSKP KSSR Semakan, RPT & templat e-RPH.</p>
-          <div class="text-xs font-semibold text-emerald-600 flex items-center gap-1">
-            <span>Buka Modul</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </div>
-        </div>
-
-        <div onclick="openModule('m4')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-amber-500 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold px-2 py-0.5 bg-amber-100 text-amber-800 rounded">Fail 4</span>
-            <i data-lucide="activity" class="w-6 h-6 text-amber-600"></i>
-          </div>
-          <h3 class="font-bold text-slate-800 text-base mb-1">Pentaksiran (BMI & SEGAK)</h3>
-          <p class="text-xs text-slate-500 mb-4">Pengurusan data murid, kalkulator automatik BMI (5-9T) & Ujian SEGAK (10-13T).</p>
-          <div class="text-xs font-semibold text-amber-600 flex items-center gap-1">
-            <span>Buka Modul</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <h3 class="font-extrabold text-slate-800 text-lg mb-1.5 group-hover:text-indigo-600 transition">Mesyuarat Panitia</h3>
+          <p class="text-xs text-slate-500 mb-5 leading-relaxed">Panggilan mesyuarat automatik, minit mesyuarat 1 hingga 4 & borang maklum balas mesyuarat.</p>
+          <div class="text-xs font-bold text-indigo-600 flex items-center gap-1.5 pt-2 border-t border-slate-100">
+            <span>Akses Fail 2</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
           </div>
         </div>
 
-        <div onclick="openModule('m5')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-purple-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold px-2 py-0.5 bg-purple-100 text-purple-700 rounded">Fail 5</span>
-            <i data-lucide="award" class="w-6 h-6 text-purple-600"></i>
+        <!-- FAIL 3 -->
+        <div onclick="openModule('m3')" class="module-card floating-card bg-white rounded-2xl shadow-md border-t-4 border-emerald-600 p-6 cursor-pointer border border-slate-100 hover:border-emerald-300">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-black px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full uppercase tracking-wider">FAIL 3</span>
+            <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600 icon-animate">
+              <i data-lucide="book-open-check" class="w-7 h-7"></i>
+            </div>
           </div>
-          <h3 class="font-bold text-slate-800 text-base mb-1">PLC & Program Panitia</h3>
-          <p class="text-xs text-slate-500 mb-4">Jana Laporan One Page Report (OPR), rekod PLC & galeri aktiviti.</p>
-          <div class="text-xs font-semibold text-purple-600 flex items-center gap-1">
-            <span>Buka Modul</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <h3 class="font-extrabold text-slate-800 text-lg mb-1.5 group-hover:text-emerald-600 transition">Kurikulum (DSKP & RPH)</h3>
+          <p class="text-xs text-slate-500 mb-5 leading-relaxed">Dokumen DSKP KSSR Semakan, Rancangan Pengajaran Tahunan (RPT) & templat e-RPH PJK.</p>
+          <div class="text-xs font-bold text-emerald-600 flex items-center gap-1.5 pt-2 border-t border-slate-100">
+            <span>Akses Fail 3</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
           </div>
         </div>
 
-        <div onclick="openModule('m6')" class="module-card bg-white rounded-xl shadow-md border-l-4 border-red-600 p-5 cursor-pointer hover:shadow-xl transition transform hover:-translate-y-1">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold px-2 py-0.5 bg-red-100 text-red-700 rounded">Fail 6</span>
-            <i data-lucide="shield-alert" class="w-6 h-6 text-red-600"></i>
+        <!-- FAIL 4 -->
+        <div onclick="openModule('m4')" class="module-card floating-card bg-white rounded-2xl shadow-md border-t-4 border-amber-500 p-6 cursor-pointer border border-slate-100 hover:border-amber-300">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-black px-3 py-1 bg-amber-100 text-amber-800 rounded-full uppercase tracking-wider">FAIL 4</span>
+            <div class="bg-amber-50 p-3 rounded-xl text-amber-600 icon-animate">
+              <i data-lucide="activity" class="w-7 h-7"></i>
+            </div>
           </div>
-          <h3 class="font-bold text-slate-800 text-base mb-1">Keselamatan & SOP</h3>
-          <p class="text-xs text-slate-500 mb-4">Muat naik SPI, surat panggilan kursus, manual SOP & rekod keselamatan.</p>
-          <div class="text-xs font-semibold text-red-600 flex items-center gap-1">
-            <span>Buka Modul</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <h3 class="font-extrabold text-slate-800 text-lg mb-1.5 group-hover:text-amber-600 transition">Pentaksiran (BMI & SEGAK)</h3>
+          <p class="text-xs text-slate-500 mb-5 leading-relaxed">Pengurusan data murid, kalkulator automatik status BMI (5-9T) & rekod Ujian SEGAK (10-13T).</p>
+          <div class="text-xs font-bold text-amber-600 flex items-center gap-1.5 pt-2 border-t border-slate-100">
+            <span>Akses Fail 4</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </div>
+        </div>
+
+        <!-- FAIL 5 -->
+        <div onclick="openModule('m5')" class="module-card floating-card bg-white rounded-2xl shadow-md border-t-4 border-purple-600 p-6 cursor-pointer border border-slate-100 hover:border-purple-300 sm:col-span-2 lg:col-span-1">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-black px-3 py-1 bg-purple-100 text-purple-800 rounded-full uppercase tracking-wider">FAIL 5</span>
+            <div class="bg-purple-50 p-3 rounded-xl text-purple-600 icon-animate">
+              <i data-lucide="award" class="w-7 h-7"></i>
+            </div>
+          </div>
+          <h3 class="font-extrabold text-slate-800 text-lg mb-1.5 group-hover:text-purple-600 transition">PLC, Program & Penjana OPR</h3>
+          <p class="text-xs text-slate-500 mb-5 leading-relaxed">Bina Laporan One Page Report (OPR) berformat biru rasmi, rekod PLC & galeri aktiviti sekolah.</p>
+          <div class="text-xs font-bold text-purple-600 flex items-center gap-1.5 pt-2 border-t border-slate-100">
+            <span>Akses Fail 5 & OPR</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
           </div>
         </div>
 
       </div>
 
-      <!-- CARTA ORGANISASI (SYSTEM BOX-TO-BOX GRID LAYOUT) -->
+      <!-- CARTA ORGANISASI SYSTEM -->
       <section class="bg-white rounded-2xl shadow-md p-6 border border-slate-200 space-y-6">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
@@ -269,9 +303,7 @@
           </button>
         </div>
 
-        <!-- SIDE-BY-SIDE BOX GRID -->
         <div id="orgBoxesContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <!-- Populated Dynamically -->
         </div>
       </section>
 
@@ -279,7 +311,7 @@
 
     <!-- MODULE DETAILED DASHBOARDS -->
     <div id="viewModuleDetail" class="hidden space-y-6">
-      <div class="flex items-center justify-between bg-white p-4 rounded-xl border shadow-sm flex-wrap gap-2">
+      <div class="flex items-center justify-between bg-white p-4 rounded-xl border shadow-sm flex-wrap gap-2 no-print">
         <button onclick="showMainHome()" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 bg-slate-100 px-3 py-1.5 rounded-lg border">
           <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Utama
         </button>
@@ -291,6 +323,130 @@
     </div>
 
   </main>
+
+  <!-- MODAL: PENJANA OPR (ONE PAGE REPORT) -->
+  <div id="oprModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full p-6 border border-slate-200 my-auto max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b pb-3 mb-4">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="file-check-2" class="w-5 h-5 text-purple-600"></i>
+          Borang Penjana OPR (One Page Report) Rasmi
+        </h3>
+        <button onclick="closeOPRModal()" class="text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="oprForm" onsubmit="generateOPR(event)" class="space-y-4 text-xs">
+        
+        <!-- 1. MAKLUMAT ASAS PROGRAM -->
+        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-3">
+          <h4 class="font-extrabold text-blue-900 uppercase">1. MAKLUMAT ASAS PROGRAM</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">Nama Program / Aktiviti</label>
+              <input type="text" id="oprNamaProgram" required placeholder="Cth: Bengkel Kemahiran Kecergasan SEGAK 2026" class="w-full border rounded-lg px-3 py-2 bg-white">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">Tarikh / Hari</label>
+              <input type="text" id="oprTarikh" required placeholder="Cth: 23 September 2026 / Rabu" class="w-full border rounded-lg px-3 py-2 bg-white">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">Masa</label>
+              <input type="text" id="oprMasa" required placeholder="Cth: 8:30 Pagi - 12:30 Tengah Hari" class="w-full border rounded-lg px-3 py-2 bg-white">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">Tempat</label>
+              <input type="text" id="oprTempat" required placeholder="Cth: Dewan SK Sungai Bakas" class="w-full border rounded-lg px-3 py-2 bg-white">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">Kumpulan Sasaran</label>
+              <input type="text" id="oprSasaran" required placeholder="Cth: Semua Murid Tahap 2 (Tahun 4, 5 & 6)" class="w-full border rounded-lg px-3 py-2 bg-white">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">Anjuran / Kelolaan</label>
+              <input type="text" id="oprAnjuran" required value="Panitia PJK SK Sungai Bakas, Miri" class="w-full border rounded-lg px-3 py-2 bg-white">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. OBJEKTIF & RINGKASAN PERJALANAN AKTIVITI -->
+        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-3">
+          <h4 class="font-extrabold text-blue-900 uppercase">2. OBJEKTIF & RINGKASAN PERJALANAN AKTIVITI</h4>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Objektif Program (Gunakan format bertitik / bertulis)</label>
+            <textarea id="oprObjektif" rows="2" required placeholder="1. Meningkatkan pemahaman murid mengenai teknik ujian SEGAK.&#10;2. Memastikan sasaran indeks BMI murid berada di tahap sihat." class="w-full border rounded-lg px-3 py-2 bg-white"></textarea>
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Ringkasan Aktiviti / Kronologi Masa</label>
+            <textarea id="oprKronologi" rows="3" required placeholder="• [ 08:30 AM ] : Pendaftaran peserta dan taklimat awal.&#10;• [ 09:00 AM ] : Ujian Tekan Tubi dan Ringkuk Tubi Paruh.&#10;• [ 11:00 AM ] : Ujian Jangkauan Melunjur & BMI.&#10;• [ 12:30 PM ] : Bersurai." class="w-full border rounded-lg px-3 py-2 bg-white"></textarea>
+          </div>
+        </div>
+
+        <!-- 3. PENILAIAN PROGRAM -->
+        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-3">
+          <h4 class="font-extrabold text-blue-900 uppercase">3. PENILAIAN PROGRAM (KEKUATAN, KELEMAHAN & IMPAK)</h4>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Kekuatan / Kejayaan</label>
+            <textarea id="oprKekuatan" rows="2" required placeholder="• Kehadiran murid amat memuaskan dan mencapai 95%.&#10;• Kerjasama yang padu daripada semua guru PJK." class="w-full border rounded-lg px-3 py-2 bg-white"></textarea>
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Kekurangan / Kekangan</label>
+            <textarea id="oprKelemahan" rows="2" required placeholder="• Masa untuk sesi amali agak suntuk.&#10;• Bilangan alatan ujian perlu ditambah untuk mempercepatkan proses." class="w-full border rounded-lg px-3 py-2 bg-white"></textarea>
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Impak & Penambahbaikan</label>
+            <textarea id="oprImpak" rows="2" required placeholder="• Impak: 90% murid memahami skoring ujian SEGAK secara kendiri.&#10;• Cadangan: Memanjangkan masa program atau membahagikan sesi amali mengikut kelas." class="w-full border rounded-lg px-3 py-2 bg-white"></textarea>
+          </div>
+        </div>
+
+        <!-- 4. LAPORAN BERGAMBAR & PENGESAHAN -->
+        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-3">
+          <h4 class="font-extrabold text-blue-900 uppercase">4. LAPORAN BERGAMBAR & TANDATANGAN</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">Gambar 1</label>
+              <input type="file" id="oprImgFile1" accept="image/*" class="w-full border rounded-lg px-2 py-1 bg-white mb-2">
+              <input type="text" id="oprImgCap1" required placeholder="Keterangan Gambar 1" class="w-full border rounded-lg px-3 py-1.5 bg-white">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">Gambar 2</label>
+              <input type="file" id="oprImgFile2" accept="image/*" class="w-full border rounded-lg px-2 py-1 bg-white mb-2">
+              <input type="text" id="oprImgCap2" required placeholder="Keterangan Gambar 2" class="w-full border rounded-lg px-3 py-1.5 bg-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">Nama Disediakan Oleh (Penyelaras)</label>
+              <input type="text" id="oprPenyelarasNama" required placeholder="Cth: En. Nita Bin Ahmad" class="w-full border rounded-lg px-3 py-2 bg-white">
+              <input type="text" id="oprPenyelarasJawatan" required placeholder="Cth: Setiausaha / Penyelaras Program" class="w-full border rounded-lg px-3 py-2 bg-white mt-1">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">Nama Disahkan Oleh (Pengesah)</label>
+              <input type="text" id="oprPengesahNama" required placeholder="Cth: OLIVIA LING MAXSON" class="w-full border rounded-lg px-3 py-2 bg-white">
+              <input type="text" id="oprPengesahJawatan" required placeholder="Cth: Guru Besar / PK Pentadbiran" class="w-full border rounded-lg px-3 py-2 bg-white mt-1">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow">
+            <i data-lucide="printer" class="w-4 h-4"></i> Jana & Pratinjau OPR
+          </button>
+          <button type="button" onclick="closeOPRModal()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2.5 rounded-xl text-xs">
+            Batal
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- PRINTABLE OPR TEMPLATE CONTAINER -->
+  <div id="printableArea" class="hidden bg-white text-slate-900 p-8 max-w-4xl mx-auto shadow-none">
+  </div>
 
   <!-- MODAL: LOGIN ADMIN -->
   <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -350,7 +506,6 @@
         <div>
           <label class="text-xs font-bold text-slate-700 block mb-1">Gambar Profil Guru (Upload)</label>
           <input type="file" id="orgPhotoInput" accept="image/*" class="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs">
-          <p class="text-[10px] text-slate-400 mt-0.5">Gambar akan dimampatkan secara automatik.</p>
         </div>
         <div class="flex gap-2 pt-2">
           <button onclick="saveOrgMember()" class="flex-1 bg-brandNavy-900 text-white font-bold py-2 rounded-lg text-xs">Simpan</button>
@@ -382,7 +537,7 @@
     </div>
   </div>
 
-  <!-- MODAL: STUDENT DATA (SEGAK/BMI) -->
+  <!-- MODAL: STUDENT DATA -->
   <div id="studentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
       <h3 class="text-lg font-bold text-slate-800 mb-4">Tambah / Kemaskini Data Murid</h3>
@@ -424,35 +579,13 @@
     </div>
   </div>
 
-  <!-- MODAL: GALLERY UPLOAD -->
-  <div id="galleryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
-      <h3 class="text-lg font-bold text-slate-800 mb-4">Muat Naik Foto Aktiviti / OPR</h3>
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">Tajuk Program / PLC</label>
-          <input type="text" id="galTitle" placeholder="Program Fit Malaysia SKSB" class="w-full border rounded-lg px-3 py-2">
-        </div>
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">Gambar Aktiviti</label>
-          <input type="file" id="galFile" accept="image/*" class="w-full border rounded-lg px-2 py-1">
-          <p class="text-[10px] text-slate-400 mt-0.5">Gambar akan dimampatkan secara automatik.</p>
-        </div>
-        <div class="flex gap-2 pt-2">
-          <button onclick="saveGalleryImage()" class="flex-1 bg-purple-600 text-white font-bold py-2 rounded-lg">Simpan Foto</button>
-          <button onclick="closeGalleryModal()" class="flex-1 bg-slate-200 text-slate-700 font-semibold py-2 rounded-lg">Batal</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- MODAL: QR CODE -->
   <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center border border-slate-200 space-y-4">
       <h3 class="font-bold text-slate-800 text-base">QR Kod Portal Panitia</h3>
       <div id="qrcode" class="flex justify-center p-3 bg-slate-50 border rounded-xl"></div>
       <p id="qrUrlText" class="text-[11px] text-blue-600 font-medium break-all"></p>
-      <p class="text-xs text-slate-500">Imbas QR ini untuk mengakses portal Panitia PJK SK Sungai Bakas terkini secara Live.</p>
+      <p class="text-xs text-slate-500">Imbas QR ini untuk mengakses portal Panitia PJK SK Sungai Bakas secara Live.</p>
       <button onclick="closeQRModal()" class="w-full bg-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-xs">Tutup</button>
     </div>
   </div>
@@ -603,14 +736,14 @@
         container.innerHTML = `<img src="${logoData}" class="w-full h-full object-contain">`;
       } else {
         container.innerHTML = `
-          <i data-lucide="image-plus" class="w-5 h-5 text-brandYellow-400"></i>
-          <span class="text-[9px] text-slate-300 font-medium leading-none mt-1">Logo</span>
+          <i data-lucide="shield" class="w-6 h-6 text-brandYellow-400"></i>
+          <span class="text-[8px] text-slate-300 font-medium leading-none mt-1">Logo</span>
         `;
         lucide.createIcons();
       }
     }
 
-    // ADMIN LOGIN
+    // ADMIN LOGIN (DISEPADUKAN DENGAN ID: sksgbakas & Password: ybb4358)
     function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
     function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
 
@@ -618,7 +751,7 @@
       const id = document.getElementById('adminIdInput').value.trim();
       const pass = document.getElementById('adminPassInput').value.trim();
 
-      if (id === 'nita' && pass === '7232') {
+      if (id === 'sksgbakas' && pass === 'ybb4358') {
         isAdmin = true;
         document.getElementById('adminStatusBadge').classList.remove('hidden');
         document.getElementById('cloudSaveBtn').classList.remove('hidden');
@@ -650,6 +783,7 @@
     function showMainHome() {
       document.getElementById('viewHome').classList.remove('hidden');
       document.getElementById('viewModuleDetail').classList.add('hidden');
+      document.getElementById('printableArea').classList.add('hidden');
       updateAnalyticsStats();
     }
 
@@ -677,12 +811,9 @@
         contentEl.innerHTML = renderModule4Content();
         renderStudentTable();
       } else if (modId === 'm5') {
-        titleEl.innerText = "Fail 5: PLC, Program & Laporan One Page Report (OPR)";
+        titleEl.innerText = "Fail 5: PLC, Program & Penjana One Page Report (OPR)";
         contentEl.innerHTML = renderModule5Content();
         renderGalleryGrid();
-      } else if (modId === 'm6') {
-        titleEl.innerText = "Fail 6: Pengurusan Keselamatan, SOP & Surat SPI";
-        contentEl.innerHTML = renderModule6Content();
       }
       lucide.createIcons();
     }
@@ -773,13 +904,7 @@
             if (photoBase64) orgData[idx].photo = photoBase64;
           }
         } else {
-          orgData.push({ 
-            id: Date.now().toString(), 
-            name, 
-            role, 
-            level, 
-            photo: photoBase64 || '' 
-          });
+          orgData.push({ id: Date.now().toString(), name, role, level, photo: photoBase64 || '' });
         }
         renderOrgBoxes();
         closeOrgModal();
@@ -952,24 +1077,182 @@
       return `
         <div class="space-y-6">
           <div class="flex items-center justify-between flex-wrap gap-2">
-            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Galeri Aktiviti, PLC & Laporan OPR</h3>
-            ${isAdmin ? `<button onclick="openGalleryModal()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"><i data-lucide="image" class="w-3.5 h-3.5"></i> Tambah Foto Aktiviti</button>` : ''}
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Penjana Laporan One Page Report (OPR) Rasmi</h3>
+            <button onclick="openOPRModal()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-md">
+              <i data-lucide="file-plus-2" class="w-4 h-4"></i> Bina Laporan OPR Baru
+            </button>
           </div>
-          <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+
+          <div class="border border-purple-200 bg-purple-50/50 p-4 rounded-xl flex items-center justify-between">
+            <div class="text-xs text-purple-900">
+              <p class="font-bold">Templat OPR Rasmi Panitia (Format Biru Standar)</p>
+              <p class="text-[11px] text-purple-700">Hasilkan laporan ringkas program lengkap dengan 4 bahagian utama mengikut piawaian sekolah.</p>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Senarai Laporan OPR / Aktiviti Terkini</h4>
+            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+          </div>
         </div>
       `;
     }
 
-    function renderModule6Content() {
-      return `
-        <div class="space-y-6">
-          <div class="flex items-center justify-between flex-wrap gap-2">
-            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Manual Keselamatan, SOP & Surat Pekeliling</h3>
-            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 6')" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Dokumen SOP</button>` : ''}
+    // OPR GENERATOR FUNCTIONS
+    function openOPRModal() {
+      document.getElementById('oprModal').classList.remove('hidden');
+    }
+
+    function closeOPRModal() {
+      document.getElementById('oprModal').classList.add('hidden');
+    }
+
+    function generateOPR(event) {
+      event.preventDefault();
+
+      const namaProgram = document.getElementById('oprNamaProgram').value.trim();
+      const tarikh = document.getElementById('oprTarikh').value.trim();
+      const masa = document.getElementById('oprMasa').value.trim();
+      const tempat = document.getElementById('oprTempat').value.trim();
+      const sasaran = document.getElementById('oprSasaran').value.trim();
+      const anjuran = document.getElementById('oprAnjuran').value.trim();
+
+      const objektif = document.getElementById('oprObjektif').value.trim().replace(/\n/g, '<br>');
+      const kronologi = document.getElementById('oprKronologi').value.trim().replace(/\n/g, '<br>');
+      const kekuatan = document.getElementById('oprKekuatan').value.trim().replace(/\n/g, '<br>');
+      const kelemahan = document.getElementById('oprKelemahan').value.trim().replace(/\n/g, '<br>');
+      const impak = document.getElementById('oprImpak').value.trim().replace(/\n/g, '<br>');
+
+      const imgCap1 = document.getElementById('oprImgCap1').value.trim();
+      const imgCap2 = document.getElementById('oprImgCap2').value.trim();
+
+      const penyelarasNama = document.getElementById('oprPenyelarasNama').value.trim();
+      const penyelarasJawatan = document.getElementById('oprPenyelarasJawatan').value.trim();
+      const pengesahNama = document.getElementById('oprPengesahNama').value.trim();
+      const pengesahJawatan = document.getElementById('oprPengesahJawatan').value.trim();
+
+      const file1 = document.getElementById('oprImgFile1').files[0];
+      const file2 = document.getElementById('oprImgFile2').files[0];
+
+      let img1Src = 'https://via.placeholder.com/400x250?text=Ruang+Kotak+Gambar+1';
+      let img2Src = 'https://via.placeholder.com/400x250?text=Ruang+Kotak+Gambar+2';
+
+      const renderPrintView = (src1, src2) => {
+        const printArea = document.getElementById('printableArea');
+        printArea.innerHTML = `
+          <div class="text-center mb-6 border-b border-slate-300 pb-4">
+            <h1 class="text-2xl font-black text-[#1E3A8A] tracking-wider uppercase">ONE PAGE REPORT (OPR)</h1>
+            <p class="text-xs font-bold text-slate-600 tracking-widest uppercase">LAPORAN RINGKAS PROGRAM / AKTIVITI / MESYUARAT</p>
           </div>
-          <div class="space-y-2">${renderDocList('Fail 6')}</div>
-        </div>
-      `;
+
+          <!-- SEKSYEN 1 -->
+          <div class="mb-4">
+            <div class="opr-table-header px-3 py-1.5 font-bold text-xs uppercase tracking-wide">1. MAKLUMAT ASAS PROGRAM</div>
+            <table class="w-full border-collapse border border-slate-300 text-xs">
+              <tr class="border-b border-slate-200"><td class="p-2 font-bold w-1/4 bg-slate-50 border-r border-slate-300">Nama Program / Aktiviti:</td><td class="p-2">${namaProgram}</td></tr>
+              <tr class="border-b border-slate-200"><td class="p-2 font-bold bg-slate-50 border-r border-slate-300">Tarikh / Hari:</td><td class="p-2">${tarikh}</td></tr>
+              <tr class="border-b border-slate-200"><td class="p-2 font-bold bg-slate-50 border-r border-slate-300">Masa:</td><td class="p-2">${masa}</td></tr>
+              <tr class="border-b border-slate-200"><td class="p-2 font-bold bg-slate-50 border-r border-slate-300">Tempat:</td><td class="p-2">${tempat}</td></tr>
+              <tr class="border-b border-slate-200"><td class="p-2 font-bold bg-slate-50 border-r border-slate-300">Kumpulan Sasaran:</td><td class="p-2">${sasaran}</td></tr>
+              <tr><td class="p-2 font-bold bg-slate-50 border-r border-slate-300">Anjuran / Kelolaan:</td><td class="p-2">${anjuran}</td></tr>
+            </table>
+          </div>
+
+          <!-- SEKSYEN 2 -->
+          <div class="mb-4">
+            <div class="opr-table-header px-3 py-1.5 font-bold text-xs uppercase tracking-wide">2. OBJEKTIF & RINGKASAN PERJALANAN AKTIVITI</div>
+            <table class="w-full border-collapse border border-slate-300 text-xs">
+              <tr class="border-b border-slate-200"><td class="p-2 font-bold w-1/4 bg-slate-50 border-r border-slate-300">Objektif Program:</td><td class="p-2 leading-relaxed">${objektif}</td></tr>
+              <tr><td class="p-2 font-bold bg-slate-50 border-r border-slate-300">Ringkasan Aktiviti / Kronologi:</td><td class="p-2 leading-relaxed">${kronologi}</td></tr>
+            </table>
+          </div>
+
+          <!-- SEKSYEN 3 -->
+          <div class="mb-4">
+            <div class="opr-table-header px-3 py-1.5 font-bold text-xs uppercase tracking-wide">3. PENILAIAN PROGRAM (KEKUATAN, KELEMAHAN & IMPAK)</div>
+            <table class="w-full border-collapse border border-slate-300 text-xs">
+              <tr class="border-b border-slate-200"><td class="p-2 font-bold w-1/4 bg-slate-50 border-r border-slate-300">Kekuatan / Kejayaan:</td><td class="p-2 leading-relaxed">${kekuatan}</td></tr>
+              <tr class="border-b border-slate-200"><td class="p-2 font-bold bg-slate-50 border-r border-slate-300">Kekurangan / Kekangan:</td><td class="p-2 leading-relaxed">${kelemahan}</td></tr>
+              <tr><td class="p-2 font-bold bg-slate-50 border-r border-slate-300">Impak & Penambahbaikan:</td><td class="p-2 leading-relaxed">${impak}</td></tr>
+            </table>
+          </div>
+
+          <!-- SEKSYEN 4 -->
+          <div class="mb-6">
+            <div class="opr-table-header px-3 py-1.5 font-bold text-xs uppercase tracking-wide">4. LAPORAN BERGAMBAR</div>
+            <div class="grid grid-cols-2 border border-slate-300 p-3 gap-3">
+              <div class="text-center">
+                <div class="h-48 border border-slate-300 bg-slate-100 flex items-center justify-center overflow-hidden rounded">
+                  <img src="${src1}" class="w-full h-full object-cover">
+                </div>
+                <p class="text-[11px] font-bold mt-1 text-slate-700">Gambar 1: <span class="font-normal">${imgCap1}</span></p>
+              </div>
+              <div class="text-center">
+                <div class="h-48 border border-slate-300 bg-slate-100 flex items-center justify-center overflow-hidden rounded">
+                  <img src="${src2}" class="w-full h-full object-cover">
+                </div>
+                <p class="text-[11px] font-bold mt-1 text-slate-700">Gambar 2: <span class="font-normal">${imgCap2}</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SIGNATURES -->
+          <div class="grid grid-cols-2 gap-8 text-xs pt-4">
+            <div>
+              <p class="font-bold mb-12">Disediakan oleh:</p>
+              <div class="border-b border-slate-400 w-3/4 mb-1"></div>
+              <p class="font-bold">Nama: ${penyelarasNama}</p>
+              <p class="text-slate-600">Jawatan: ${penyelarasJawatan}</p>
+            </div>
+            <div>
+              <p class="font-bold mb-12">Disahkan oleh:</p>
+              <div class="border-b border-slate-400 w-3/4 mb-1"></div>
+              <p class="font-bold">Nama: ${pengesahNama}</p>
+              <p class="text-slate-600">Jawatan: ${pengesahJawatan}</p>
+            </div>
+          </div>
+
+          <!-- ACTION BUTTONS FOR PRINT -->
+          <div class="no-print flex gap-3 mt-8 pt-4 border-t">
+            <button onclick="window.print()" class="bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1.5 shadow">
+              <i data-lucide="printer" class="w-4 h-4"></i> Cetak / Simpan Ke PDF
+            </button>
+            <button onclick="showMainHome()" class="bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-lg text-xs">
+              Kembali
+            </button>
+          </div>
+        `;
+
+        // Save OPR into gallery state
+        galleryData.push({
+          id: Date.now().toString(),
+          title: namaProgram,
+          image: src1,
+          date: tarikh
+        });
+
+        closeOPRModal();
+        document.getElementById('viewHome').classList.add('hidden');
+        document.getElementById('viewModuleDetail').classList.add('hidden');
+        printArea.classList.remove('hidden');
+        lucide.createIcons();
+
+        if (isAdmin) saveDataToCloud();
+      };
+
+      if (file1 && file2) {
+        compressImage(file1, 600, 400, 0.7, (s1) => {
+          compressImage(file2, 600, 400, 0.7, (s2) => {
+            renderPrintView(s1, s2);
+          });
+        });
+      } else if (file1) {
+        compressImage(file1, 600, 400, 0.7, (s1) => {
+          renderPrintView(s1, img2Src);
+        });
+      } else {
+        renderPrintView(img1Src, img2Src);
+      }
     }
 
     // STUDENT / SEGAK FUNCTIONS
@@ -1051,7 +1334,6 @@
       }
     }
 
-    // EXPORT STUDENT CSV (ADD-ON FEATURE)
     function exportStudentsToCSV() {
       if (studentData.length === 0) return alert("Tiada data murid untuk di-export.");
 
@@ -1069,40 +1351,12 @@
       document.body.removeChild(link);
     }
 
-    // GALLERY FUNCTIONS
-    function openGalleryModal() {
-      document.getElementById('galTitle').value = '';
-      document.getElementById('galFile').value = '';
-      document.getElementById('galleryModal').classList.remove('hidden');
-    }
-
-    function closeGalleryModal() { document.getElementById('galleryModal').classList.add('hidden'); }
-
-    function saveGalleryImage() {
-      const title = document.getElementById('galTitle').value.trim();
-      const fileInput = document.getElementById('galFile');
-
-      if (!title || !fileInput.files[0]) return alert("Sila lengkapkan tajuk dan pilih gambar.");
-
-      compressImage(fileInput.files[0], 600, 600, 0.7, (compressedBase64) => {
-        galleryData.push({
-          id: Date.now().toString(),
-          title,
-          image: compressedBase64,
-          date: new Date().toLocaleDateString()
-        });
-        closeGalleryModal();
-        renderGalleryGrid();
-        saveDataToCloud();
-      });
-    }
-
     function renderGalleryGrid() {
       const grid = document.getElementById('galleryGrid');
       if (!grid) return;
 
       if (galleryData.length === 0) {
-        grid.innerHTML = `<p class="col-span-3 text-xs text-slate-400 italic">Tiada foto dimuat naik.</p>`;
+        grid.innerHTML = `<p class="col-span-3 text-xs text-slate-400 italic">Tiada laporan OPR dimuat naik.</p>`;
         return;
       }
 
@@ -1121,7 +1375,7 @@
     }
 
     function deleteGalleryItem(id) {
-      if(confirm("Padam gambar ini?")) {
+      if(confirm("Padam laporan ini?")) {
         galleryData = galleryData.filter(g => g.id !== id);
         renderGalleryGrid();
         saveDataToCloud();
