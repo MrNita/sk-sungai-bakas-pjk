@@ -140,7 +140,7 @@
     </div>
   </header>
 
-  <!-- MAIN CONTAINER (Padding top added to accommodate fixed header) -->
+  <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto px-4 pt-64 sm:pt-72 pb-6 flex-1 w-full space-y-6">
 
     <!-- HOME VIEW -->
@@ -240,8 +240,8 @@
           </div>
         </div>
 
-        <!-- FAIL 3 -->
-        <div onclick="openModule('m3')" class="module-card floating-card bg-white rounded-2xl shadow-md border-t-4 border-emerald-600 p-6 cursor-pointer border border-slate-100 hover:border-emerald-300">
+        <!-- FAIL 3 (DIRECT GOOGLE DRIVE LINK) -->
+        <div onclick="openGoogleDriveDSKP()" class="module-card floating-card bg-white rounded-2xl shadow-md border-t-4 border-emerald-600 p-6 cursor-pointer border border-slate-100 hover:border-emerald-300">
           <div class="flex items-center justify-between mb-4">
             <span class="text-xs font-black px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full uppercase tracking-wider">FAIL 3</span>
             <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600 icon-animate">
@@ -249,10 +249,15 @@
             </div>
           </div>
           <h3 class="font-extrabold text-slate-800 text-lg mb-1.5">Kurikulum (DSKP & RPH)</h3>
-          <p class="text-xs text-slate-500 mb-5 leading-relaxed">Dokumen DSKP KSSR Semakan, Rancangan Pengajaran Tahunan (RPT) & templat e-RPH PJK.</p>
-          <div class="text-xs font-bold text-emerald-600 flex items-center gap-1.5 pt-2 border-t border-slate-100">
-            <span>Akses Fail 3</span>
-            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          <p class="text-xs text-slate-500 mb-5 leading-relaxed">Dokumen DSKP PJK Tahun 1 hingga Tahun 6, Rancangan Pengajaran Tahunan (RPT) & templat e-RPH.</p>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+            <div class="text-xs font-bold text-emerald-600 flex items-center gap-1.5">
+              <span>Akses Fail 3 (Google Drive)</span>
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+            </div>
+            <button onclick="event.stopPropagation(); openModule('m3');" class="text-[10px] text-slate-500 hover:text-emerald-700 underline font-semibold">
+              Modul Dalaman
+            </button>
           </div>
         </div>
 
@@ -594,6 +599,11 @@
   </div>
 
   <script>
+    // GOOGLE DRIVE DRIVE DIRECT REDIRECT FOR FAIL 3
+    function openGoogleDriveDSKP() {
+      window.open("https://drive.google.com/drive/folders/1aC-C2aCUpK1K92H_o2L-xHk8w20-Example", "_blank");
+    }
+
     // FIREBASE CONFIGURATION
     const firebaseConfig = {
       apiKey: "AIzaSyBjtcl9zvu-xpDrwRoaWL7KdASXKI5HijU",
@@ -636,10 +646,8 @@
       }
 
       if (currentScrollY > lastScrollY) {
-        // Scrolling DOWN -> Hide Header
         topHeader.classList.add('header-hidden');
       } else {
-        // Scrolling UP -> Show Header
         topHeader.classList.remove('header-hidden');
       }
 
@@ -1059,7 +1067,12 @@
         <div class="space-y-6">
           <div class="flex items-center justify-between flex-wrap gap-2">
             <h3 class="font-bold text-slate-800 text-sm sm:text-base">DSKP, RPT & Templat e-RPH PJK</h3>
-            ${isAdmin ? `<button onclick="triggerFileUpload('Fail 3')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Kurikulum</button>` : ''}
+            <div class="flex gap-2">
+              <button onclick="openGoogleDriveDSKP()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Buka Google Drive DSKP
+              </button>
+              ${isAdmin ? `<button onclick="triggerFileUpload('Fail 3')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Muat Naik Kurikulum</button>` : ''}
+            </div>
           </div>
           <div class="space-y-2">${renderDocList('Fail 3')}</div>
         </div>
